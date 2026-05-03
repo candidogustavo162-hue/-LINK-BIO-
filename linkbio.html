@@ -386,7 +386,6 @@ function initAnimations() {
 
   const tl = gsap.timeline({paused:true, onComplete: () => {
     document.body.style.overflow = 'auto';
-    // Removed auto-scroll to contacts
   }});
 
   gsap.set('#portal-flash', {opacity:0});
@@ -403,9 +402,9 @@ function initAnimations() {
     .to('#portal-flash', {opacity:1,duration:.1,ease:'power4.in'}, 1.7)
     .to('#logo-left-half', {x:'-250vw',rotate:-20,duration:1.2,ease:'power3.inOut'}, 1.7)
     .to('#logo-right-half', {x:'250vw',rotate:20,duration:1.2,ease:'power3.inOut'}, 1.7)
-    .to('#hero', {opacity:0,duration:.8,ease:'power2.inOut', onStart:()=>gsap.set('#main-wrapper',{opacity:1})}, 2.2)
-    .to('#main-wrapper', {y:0,duration:1.2,ease:'power3.out'}, 2.3)
-    .to('#portal-flash', {opacity:0,duration:1.2,ease:'power2.out'}, 2.2)
+    .to('#hero', {opacity:0,duration:.7,ease:'power2.inOut', onStart:()=>gsap.set('#main-wrapper',{opacity:1})}, 2.2)
+    .to('#main-wrapper', {y:0,duration:1.0,ease:'power3.out'}, 2.3)
+    .to('#portal-flash', {opacity:0,duration:1.0,ease:'power2.out'}, 2.2)
     .set('#hero', {display:'none'});
 
   let played = false;
@@ -417,11 +416,11 @@ function initAnimations() {
   }
 
   document.body.style.overflow = 'hidden';
-  window.addEventListener('wheel', e => { if(e.deltaY>0) play(); }, {passive:true});
-  let ty = 0;
-  window.addEventListener('touchstart', e => { ty = e.touches[0].clientY; }, {passive:true});
-  window.addEventListener('touchmove', e => { if(ty - e.touches[0].clientY > 20) play(); }, {passive:true});
-  window.addEventListener('scroll', () => { if(window.scrollY>5) play(); }, {passive:true});
+  
+  // Auto-play after a short delay for a premium feel
+  setTimeout(play, 1000);
+
+  // Still allow click to skip delay
   document.getElementById('hero').addEventListener('click', play);
 
   // Card animations
