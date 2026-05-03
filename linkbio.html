@@ -13,23 +13,18 @@
   --bg:#020b1c;
   --accent:#d1ff4d;
   --text:#ffffff;
-  --muted:rgba(255,255,255,0.48);
+  --muted:rgba(255,255,255,0.7);
   --radius:24px;
 }
 html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 #bg-layer{position:fixed;inset:0;background:url('bg.png') center/cover no-repeat;opacity:0.08;z-index:-2}
 .ambient-orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:-1;opacity:.28}
-.orb-1{width:55vw;height:55vw;top:-15vw;left:-10vw;background:radial-gradient(circle,#1a4fff 0%,transparent 70%)}
-.orb-2{width:45vw;height:45vw;top:30vh;right:-15vw;background:radial-gradient(circle,#0e2fa0 0%,transparent 70%);opacity:.18}
-.orb-3{width:60vw;height:60vw;bottom:-20vw;left:10vw;background:radial-gradient(circle,#102060 0%,transparent 70%);opacity:.22}
+.orb-1{width:55vw;height:55vw;top:-15vw;left:-10vw;background:radial-gradient(circle,color-mix(in srgb, var(--accent) 40%, #1a4fff) 0%,transparent 70%)}
+.orb-2{width:45vw;height:45vw;top:30vh;right:-15vw;background:radial-gradient(circle,color-mix(in srgb, var(--accent) 30%, #0e2fa0) 0%,transparent 70%);opacity:.18}
+.orb-3{width:60vw;height:60vw;bottom:-20vw;left:10vw;background:radial-gradient(circle,color-mix(in srgb, var(--accent) 20%, #102060) 0%,transparent 70%);opacity:.22}
 .vignette{position:fixed;inset:0;background:radial-gradient(ellipse 100% 80% at 50% 35%,transparent 15%,var(--bg) 78%);z-index:0;pointer-events:none}
-header{position:fixed;top:0;width:100%;padding:13px 20px;display:flex;justify-content:space-between;align-items:center;z-index:100;background:rgba(2,11,28,.88);backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.06)}
-.header-logo{height:34px;object-fit:contain}
-.header-logo-text{font-size:1.1rem;font-weight:800;color:var(--text)}
-.header-cta{font-size:13px;font-weight:700;color:#020b1c;background:var(--accent);padding:9px 20px;border-radius:24px;text-decoration:none;letter-spacing:.02em;transition:filter .15s}
-.header-cta:hover{filter:brightness(1.08)}
-#hero{height:100vh;width:100%;position:fixed;top:0;left:0;display:flex;justify-content:center;align-items:center;overflow:hidden;z-index:2000;background:radial-gradient(ellipse 160% 110% at 50% 60%,#0c2255 0%,#020b1c 65%)}
-.logo-glow-bg{position:absolute;width:72vw;height:72vw;max-width:420px;max-height:420px;border-radius:50%;background:radial-gradient(circle,rgba(60,130,255,.32) 0%,rgba(40,100,220,.16) 35%,rgba(20,60,180,.06) 60%,transparent 75%);z-index:8;pointer-events:none;animation:logoPulse 3.5s ease-in-out infinite}
+#hero{height:100vh;width:100%;position:fixed;top:0;left:0;display:flex;justify-content:center;align-items:center;overflow:hidden;z-index:2000;background:radial-gradient(ellipse 160% 110% at 50% 60%, var(--bg-soft, #0c2255) 0%, var(--bg, #020b1c) 65%)}
+.logo-glow-bg{position:absolute;width:72vw;height:72vw;max-width:420px;max-height:420px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb, var(--accent) 32%, transparent) 0%,color-mix(in srgb, var(--accent) 16%, transparent) 35%,color-mix(in srgb, var(--accent) 6%, transparent) 60%,transparent 75%);z-index:8;pointer-events:none;animation:logoPulse 3.5s ease-in-out infinite}
 @keyframes logoPulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
 .floating-elements{position:absolute;inset:0;pointer-events:none;z-index:5}
 .logo-container{position:relative;width:min(360px,78vw);aspect-ratio:320/170;z-index:10;transform-origin:center center;will-change:transform}
@@ -39,23 +34,23 @@ header{position:fixed;top:0;width:100%;padding:13px 20px;display:flex;justify-co
 .logo-text-hero{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(2rem,8vw,3rem);font-weight:900;letter-spacing:-.03em;will-change:transform,filter}
 #logo-text-left{clip-path:inset(0 50% 0 0)}
 #logo-text-right{clip-path:inset(0 0 0 50%)}
-.glow-line{position:absolute;top:-30%;left:50%;width:3px;height:160%;background:linear-gradient(to bottom,transparent 0%,rgba(180,220,255,.5) 20%,#fff 50%,rgba(180,220,255,.5) 80%,transparent 100%);box-shadow:0 0 10px 4px rgba(160,210,255,1),0 0 36px 10px rgba(80,160,255,.7),0 0 70px 22px rgba(30,100,255,.35);opacity:0;transform:translateX(-50%);z-index:11;transform-origin:center center;will-change:transform,opacity}
-#portal-flash{position:absolute;inset:0;background:radial-gradient(ellipse 55% 100% at 50% 50%,rgba(200,230,255,1) 0%,rgba(80,160,255,.85) 22%,rgba(20,80,200,.45) 52%,transparent 72%);z-index:18;pointer-events:none;opacity:0}
+.glow-line{position:absolute;top:-30%;left:50%;width:3px;height:160%;background:linear-gradient(to bottom,transparent 0%,color-mix(in srgb, var(--accent) 50%, transparent) 20%,#fff 50%,color-mix(in srgb, var(--accent) 50%, transparent) 80%,transparent 100%);box-shadow:0 0 10px 4px var(--accent),0 0 36px 10px color-mix(in srgb, var(--accent) 70%, transparent),0 0 70px 22px color-mix(in srgb, var(--accent) 35%, transparent);opacity:0;transform:translateX(-50%);z-index:11;transform-origin:center center;will-change:transform,opacity}
+#portal-flash{position:absolute;inset:0;background:radial-gradient(ellipse 55% 100% at 50% 50%,#fff 0%,var(--accent) 22%,color-mix(in srgb, var(--accent) 45%, transparent) 52%,transparent 72%);z-index:18;pointer-events:none;opacity:0}
 .scroll-hint{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);text-align:center;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.30);white-space:nowrap;z-index:12}
 .scroll-hint .chevron{margin-top:9px;font-size:13px;color:var(--accent);animation:bounce 2s ease-in-out infinite}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
 #main-wrapper{position:relative;z-index:30;opacity:0;padding-bottom:20px}
 .top-reveal-area{width:100%;height:60vh;display:flex;justify-content:center;align-items:center;padding-top:40px}
-.reveal-logo{width:min(280px,60vw);height:auto;object-fit:contain;filter:drop-shadow(0 0 30px rgba(60,130,255,.4));animation:logoFloat 4s ease-in-out infinite}
+.reveal-logo{width:min(280px,60vw);height:auto;object-fit:contain;filter:drop-shadow(0 0 22px color-mix(in srgb, var(--accent), transparent 30%));animation:logoFloat 4s ease-in-out infinite}
 .reveal-logo-text{font-size:clamp(2.5rem,10vw,4rem);font-weight:900;letter-spacing:-.03em;animation:logoFloat 4s ease-in-out infinite}
 @keyframes logoFloat{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-8px) rotate(.4deg)}60%{transform:translateY(-4px) rotate(-.3deg)}}
 .page-header{padding:60px 24px 28px;text-align:center}
-.page-header-badge{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);background:rgba(209,255,77,.08);border:1px solid rgba(209,255,77,.22);padding:6px 14px;border-radius:20px;margin-bottom:18px}
+.page-header-badge{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);background:color-mix(in srgb, var(--accent) 12%, transparent);border:1px solid color-mix(in srgb, var(--accent) 25%, transparent);padding:8px 18px;border-radius:20px;margin-bottom:18px;backdrop-filter:blur(8px)}
 .page-title{font-size:clamp(2.4rem,10vw,3.4rem);font-weight:900;line-height:1.06;margin-bottom:14px;letter-spacing:-.03em}
 .page-sub{font-size:.95rem;color:var(--muted);max-width:290px;margin:0 auto;line-height:1.72}
 .accent{color:var(--accent)}
 .cards-grid{display:flex;flex-direction:column;gap:14px;padding:0 16px 32px;max-width:520px;margin:0 auto}
-.card{display:flex;flex-direction:row;align-items:stretch;background:rgba(255,255,255,.038);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);text-decoration:none;color:var(--text);position:relative;overflow:hidden;min-height:148px;transition:transform .22s ease,box-shadow .22s ease,background .22s ease;-webkit-tap-highlight-color:transparent;backdrop-filter:blur(16px)}
+.card{display:flex;flex-direction:row;align-items:stretch;background:color-mix(in srgb, var(--card-color, var(--accent)) 8%, rgba(255,255,255,0.04));border:1px solid rgba(255,255,255,.12);border-radius:var(--radius);text-decoration:none;color:var(--text);position:relative;overflow:hidden;min-height:148px;transition:transform .22s ease,box-shadow .22s ease,background .22s ease;-webkit-tap-highlight-color:transparent;backdrop-filter:blur(16px)}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;border-radius:var(--radius) var(--radius) 0 0;background:linear-gradient(to bottom,rgba(255,255,255,.055) 0%,transparent 100%);pointer-events:none;z-index:1}
 .card:active{transform:scale(.985);box-shadow:0 4px 24px rgba(0,0,0,.3)}
 @media(hover:hover){.card:hover{transform:translateY(-5px);background:rgba(255,255,255,.06);box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 0 1.5px var(--card-color,rgba(255,255,255,.12)),0 0 40px -10px var(--card-color,transparent)}.card:hover .card-cta i{transform:translateX(4px)}}
@@ -66,13 +61,15 @@ header{position:fixed;top:0;width:100%;padding:13px 20px;display:flex;justify-co
 .card-desc{font-size:.78rem;color:var(--muted);line-height:1.62;flex-grow:1;margin-bottom:16px}
 .card-cta{display:inline-flex;align-items:center;gap:7px;font-size:.76rem;font-weight:700;color:var(--card-color,var(--accent));background:color-mix(in srgb,var(--card-color,var(--accent)) 13%,transparent);border:1px solid color-mix(in srgb,var(--card-color,var(--accent)) 30%,transparent);padding:9px 16px;border-radius:28px;width:fit-content;letter-spacing:.01em;transition:background .18s;min-height:38px}
 .card-cta i{font-size:11px;transition:transform .2s ease}
-.card-icon-area{width:136px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:12px 14px 12px 4px;position:relative;z-index:4}
+.card-icon-area{width:110px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:12px 14px;position:relative;z-index:4}
 .icon-placeholder{position:relative;width:110px;height:110px;display:flex;align-items:center;justify-content:center;animation:iconFloat 3.5s ease-in-out infinite}
 @keyframes iconFloat{0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-7px) rotate(1.5deg)}65%{transform:translateY(-3px) rotate(-1deg)}}
-.icon-glow{position:absolute;inset:8px;border-radius:50%;background:var(--card-color,rgba(255,255,255,.2));filter:blur(18px);opacity:.45;transition:opacity .22s}
+.icon-glow{position:absolute;inset:15px;border-radius:50%;background:var(--card-color,rgba(255,255,255,0.3));filter:blur(14px);opacity:.35;transition:opacity .22s}
 .card:hover .icon-glow,.card:active .icon-glow{opacity:.7}
-.icon-inner{position:relative;width:76px;height:76px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff;box-shadow:0 8px 28px rgba(0,0,0,.35),0 2px 8px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.2)}
-.icon-inner::after{content:'';position:absolute;top:0;left:0;right:0;height:42%;border-radius:22px 22px 0 0;background:linear-gradient(to bottom,rgba(255,255,255,.22) 0%,transparent 100%)}
+.icon-inner{position:relative;width:90px;height:90px;display:flex;align-items:center;justify-content:center;z-index:5}
+.icon-img{width:100%;height:100%;background-size:contain;background-position:center;background-repeat:no-repeat;filter:drop-shadow(0 12px 20px rgba(0,0,0,0.45));pointer-events:none;transition:transform .3s ease}
+.card:hover .icon-img{transform:scale(1.15) rotate(4deg)}
+.icon-inner::after{display:none}
 .info-bar{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 36px;max-width:520px;margin:0 auto}
 .info-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:18px 14px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;backdrop-filter:blur(12px)}
 .info-item i{font-size:20px;color:var(--accent);margin-bottom:2px}
@@ -89,7 +86,7 @@ header{position:fixed;top:0;width:100%;padding:13px 20px;display:flex;justify-co
   .card-body{padding:22px 20px 16px}
   .card-icon-area{width:100%;padding:0 20px 20px;justify-content:flex-start}
   .icon-placeholder{width:100px;height:100px}
-  .icon-inner{width:88px;height:88px}
+  .icon-inner{width:90px;height:90px}
   .info-bar{grid-template-columns:repeat(4,1fr);max-width:720px;padding:0 20px 40px}
 }
 .loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
@@ -121,10 +118,6 @@ header{position:fixed;top:0;width:100%;padding:13px 20px;display:flex;justify-co
 <div class="ambient-orb orb-2"></div>
 <div class="ambient-orb orb-3"></div>
 
-<header id="main-header" style="opacity:0;pointer-events:none">
-  <div id="header-logo-wrap"></div>
-  <a href="#" class="header-cta" id="header-cta">Fale Conosco</a>
-</header>
 
 <section id="hero">
   <div class="floating-elements" id="particles"></div>
@@ -159,49 +152,52 @@ header{position:fixed;top:0;width:100%;padding:13px 20px;display:flex;justify-co
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB5Dxg6wrBGnB75mx-nyd0jQc8gSRBx4qQ",
-  authDomain: "link-bio-6da09.firebaseapp.com",
-  projectId: "link-bio-6da09",
-  storageBucket: "link-bio-6da09.firebasestorage.app",
-  messagingSenderId: "901664763233",
-  appId: "1:901664763233:web:7e14ea4bb7f93f97dd2920"
-};
+const supabaseUrl = 'https://ejkoqkggtwkloukpekpv.supabase.co';
+const supabaseKey = 'sb_publishable_PIMTKiW8Y2ZX7zkp8_kxqQ_BguIfEL3';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const STORAGE_URL = 'https://ejkoqkggtwkloukpekpv.supabase.co/storage/v1/object/public/logos';
 
 const LINK_ICONS = {
-  whatsapp: {icon:'fab fa-whatsapp', color:'#25d366', cat:'ATENDIMENTO', cta:'Falar no WhatsApp'},
-  instagram: {icon:'fab fa-instagram', color:'#e1306c', cat:'REDES SOCIAIS', cta:'Seguir Agora'},
-  phone: {icon:'fas fa-phone', color:'#f97316', cat:'TELEFONE', cta:'Ligar Agora'},
-  maps: {icon:'fas fa-map-marker-alt', color:'#06b6d4', cat:'LOCALIZAÇÃO', cta:'Ver no Mapa'},
-  website: {icon:'fas fa-globe', color:'#818cf8', cat:'SITE OFICIAL', cta:'Acessar Site'},
-  group: {icon:'fas fa-users', color:'#3b82f6', cat:'PROMOÇÕES', cta:'Entrar no Grupo'},
-  app: {icon:'fas fa-mobile-alt', color:'#60a5fa', cat:'APLICATIVO', cta:'Baixar Agora'},
-  message: {icon:'fas fa-comment', color:'#2dd4bf', cat:'ATENDIMENTO', cta:'Enviar Mensagem'},
-  email: {icon:'fas fa-envelope', color:'#f59e0b', cat:'E-MAIL', cta:'Enviar E-mail'},
+  whatsapp: {icon:'fab fa-whatsapp', img:`${STORAGE_URL}/WHA.png`, color:'#25d366', cat:'ATENDIMENTO', cta:'Falar no WhatsApp'},
+  instagram: {icon:'fab fa-instagram', img:`${STORAGE_URL}/INSTAGRAM.png`, color:'#e1306c', cat:'REDES SOCIAIS', cta:'Seguir Agora'},
+  phone: {icon:'fas fa-phone', img:`${STORAGE_URL}/TELEFO.png`, color:'#f97316', cat:'TELEFONE', cta:'Ligar Agora'},
+  maps: {icon:'fas fa-map-marker-alt', img:`${STORAGE_URL}/LOCAL.png`, color:'#06b6d4', cat:'LOCALIZAÇÃO', cta:'Ver no Mapa'},
+  website: {icon:'fas fa-globe', img:`${STORAGE_URL}/SITE.png`, color:'#818cf8', cat:'SITE OFICIAL', cta:'Visitar o Site'},
+  group: {icon:'fas fa-users', img:`${STORAGE_URL}/GRUPO.png`, color:'#3b82f6', cat:'PROMOÇÕES', cta:'Entrar no Grupo'},
+  app: {icon:'fas fa-mobile-alt', img:`${STORAGE_URL}/APP.png`, color:'#60a5fa', cat:'APLICATIVO', cta:'Baixar Aplicativo'},
+  message: {icon:'fas fa-comment', img:`${STORAGE_URL}/MENSA.png`, color:'#2dd4bf', cat:'ATENDIMENTO', cta:'Fale com a Loja'},
+  email: {icon:'fas fa-envelope', img:`${STORAGE_URL}/MENSA.png`, color:'#f59e0b', cat:'E-MAIL', cta:'Enviar E-mail'},
 };
+
+// Helper to mix colors for CSS
+function colorMix(base, overlay, percent) {
+  return `color-mix(in srgb, ${base}, ${overlay} ${percent}%)`;
+}
 
 async function loadClient() {
   const params = new URLSearchParams(window.location.search);
-  const slug = params.get('client');
+  const slug = params.get('client') || window.location.hash.substring(1);
 
   if (!slug) {
-    showError();
+    showError("Por favor, especifique um cliente na URL (ex: linkbio.html#slug)");
     return;
   }
 
   try {
-    const snap = await getDoc(doc(db, 'clients', slug));
-    if (!snap.exists()) {
+    const { data, error } = await supabase
+      .from('clients')
+      .select('*')
+      .eq('slug', slug)
+      .single();
+
+    if (error) {
       showError(`O cliente "${slug}" não foi encontrado no banco de dados.`);
       return;
     }
-    const data = snap.data();
+    
     if (data.status !== 'active') {
       showError("Este link bio está desativado no momento.");
       return;
@@ -209,7 +205,7 @@ async function loadClient() {
     buildPage(data);
   } catch(e) {
     console.error("Erro ao carregar:", e);
-    showError(`Erro de conexão com o Firebase: ${e.message}. Verifique se o banco de dados está em 'Modo Teste' ou se as regras permitem leitura pública.`);
+    showError(`Erro de conexão com o Supabase: ${e.message}.`);
   }
 }
 
@@ -223,21 +219,47 @@ function showError(msg) {
 }
 
 function buildPage(data) {
-  const accent = data.accentColor || '#d1ff4d';
-  const bg = data.bgColor || '#020b1c';
+  const accent = data.accent_color || '#d1ff4d';
+  const bg = data.bg_color || '#020b1c';
 
   // CSS vars
   document.documentElement.style.setProperty('--accent', accent);
   document.documentElement.style.setProperty('--bg', bg);
+  
+  // Calculate soft bg for hero
+  const softBg = colorMix(bg, accent, 15);
+  document.documentElement.style.setProperty('--bg-soft', softBg);
+  
+  // Update Orbs
+  document.querySelectorAll('.ambient-orb').forEach((orb, i) => {
+    orb.style.background = `radial-gradient(circle, ${accent}${i === 0 ? '44' : '22'} 0%, transparent 70%)`;
+  });
+
+  // Update Logo Glow and Reveal
+  const logoGlow = document.querySelector('.logo-glow-bg');
+  if (logoGlow) {
+    logoGlow.style.background = `radial-gradient(circle, ${accent}55 0%, ${accent}22 35%, ${accent}0a 60%, transparent 75%)`;
+  }
+  
+  const revealLogo = document.querySelector('.reveal-logo');
+  if (revealLogo) {
+    revealLogo.style.filter = `drop-shadow(0 0 35px ${accent})`;
+  }
+
+  // Update Animation Elements (Glow Line and Portal Flash)
+  const glowLine = document.getElementById('glow');
+  if (glowLine) {
+    glowLine.style.background = `linear-gradient(to bottom, transparent 0%, ${accent}88 20%, #fff 50%, ${accent}88 80%, transparent 100%)`;
+    glowLine.style.boxShadow = `0 0 10px 4px ${accent}, 0 0 36px 10px ${accent}aa, 0 0 70px 22px ${accent}44`;
+  }
+
+  const portalFlash = document.getElementById('portal-flash');
+  if (portalFlash) {
+    portalFlash.style.background = `radial-gradient(ellipse 55% 100% at 50% 50%, #fff 0%, ${accent} 22%, ${accent}aa 52%, transparent 72%)`;
+  }
+
   document.title = data.name;
 
-  // Header
-  const headerLogoWrap = document.getElementById('header-logo-wrap');
-  if (data.logo) {
-    headerLogoWrap.innerHTML = `<img src="${data.logo}" alt="${data.name}" class="header-logo">`;
-  } else {
-    headerLogoWrap.innerHTML = `<span class="header-logo-text">${data.name}</span>`;
-  }
 
   // Hero logo
   if (data.logo) {
@@ -275,9 +297,6 @@ function buildPage(data) {
     document.getElementById('footer-tagline').innerHTML = `${data.description}`;
   }
 
-  // CTA header
-  const wLink = (data.links||[]).find(l => l.type === 'whatsapp');
-  if (wLink) document.getElementById('header-cta').href = wLink.url;
 
   // Cards
   const grid = document.getElementById('cards-grid');
@@ -295,9 +314,9 @@ function buildPage(data) {
         </div>
         <div class="card-icon-area" style="animation-delay:-${delay}ms">
           <div class="icon-placeholder">
-            <div class="icon-glow"></div>
-            <div class="icon-inner" style="background:linear-gradient(145deg,${info.color}cc,${info.color}88)">
-              <i class="${info.icon}"></i>
+            <div class="icon-glow" style="background:${info.color}"></div>
+            <div class="icon-inner">
+              ${info.img ? `<div class="icon-img" style="background-image:url('${info.img}')" aria-label="${link.label}"></div>` : `<i class="${info.icon}"></i>`}
             </div>
           </div>
         </div>
@@ -352,7 +371,6 @@ function initAnimations() {
   gsap.set('#portal-flash', {opacity:0});
   gsap.set('#glow', {opacity:0});
   gsap.set('#main-wrapper', {opacity:0,y:100});
-  gsap.set('#main-header', {opacity:0,y:-20,pointerEvents:'none'});
   gsap.set(['#logo-left-half','#logo-right-half'], {filter:'brightness(1) saturate(1)'});
 
   tl.to('.scroll-hint', {opacity:0,y:20,duration:.3,ease:'power2.in'})
@@ -366,7 +384,6 @@ function initAnimations() {
     .to('#logo-right-half', {x:'250vw',rotate:20,duration:1.2,ease:'power3.inOut'}, 1.7)
     .to('#hero', {opacity:0,duration:.8,ease:'power2.inOut', onStart:()=>gsap.set('#main-wrapper',{opacity:1})}, 2.2)
     .to('#main-wrapper', {y:0,duration:1.2,ease:'power3.out'}, 2.3)
-    .to('#main-header', {opacity:1,y:0,pointerEvents:'auto',duration:.8,ease:'power2.out'}, 2.5)
     .to('#portal-flash', {opacity:0,duration:1.2,ease:'power2.out'}, 2.2)
     .set('#hero', {display:'none'});
 

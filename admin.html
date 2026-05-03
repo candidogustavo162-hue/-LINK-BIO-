@@ -323,8 +323,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Logo URL</label>
-                    <input type="url" id="client-logo" class="form-control" placeholder="https://exemplo.com/logo.png">
+                    <label>Logo do Cliente</label>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <div id="logo-preview" style="width: 64px; height: 64px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-light); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                            <i class="fas fa-image" style="color: var(--text-muted);"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <input type="file" id="client-logo-file" class="form-control" accept="image/*" style="margin-bottom: 8px;">
+                            <input type="url" id="client-logo" class="form-control" placeholder="Ou cole a URL aqui">
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -382,22 +390,18 @@
     <div id="toast"></div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyB5Dxg6wrBGnB75mx-nyd0jQc8gSRBx4qQ",
-            authDomain: "link-bio-6da09.firebaseapp.com",
-            projectId: "link-bio-6da09",
-            storageBucket: "link-bio-6da09.firebasestorage.app",
-            messagingSenderId: "901664763233",
-            appId: "1:901664763233:web:7e14ea4bb7f93f97dd2920"
+        const supabaseUrl = 'https://ejkoqkggtwkloukpekpv.supabase.co';
+        const supabaseKey = 'sb_publishable_PIMTKiW8Y2ZX7zkp8_kxqQ_BguIfEL3';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        const modal = document.getElementById('client-modal');
+        const closeModal = () => {
+            if (modal) modal.style.display = 'none';
+            document.getElementById('client-form').reset();
+            document.getElementById('links-list').innerHTML = '';
         };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
 
         // Global Error Tracking
         window.onerror = function(msg, url, line, col, error) {
@@ -418,9 +422,18 @@
             { id: 'email', label: 'E-mail' }
         ];
 
+        // Global functions exposure (using function declarations for hoisting)
+        window.loadClients = loadClients;
+        window.renderClients = renderClients;
+        window.addLinkRow = addLinkRow;
+        window.saveClient = saveClient;
+        window.editClient = editClient;
+        window.deleteClient = deleteClient;
+        window.closeModal = closeModal;
+
         // Auth state
-        onAuthStateChanged(auth, user => {
-            if (user) {
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('app').style.display = 'flex';
                 loadClients();
@@ -438,110 +451,129 @@
             
             if (!email || !pass) return showToast("Preencha todos os campos");
 
+            loader.style.display = 'inline-block';
             try {
-                console.log("Tentando login com:", email);
-                await signInWithEmailAndPassword(auth, email, pass);
+                console.log("Tentando login com Supabase:", email);
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: pass,
+                });
+                
+                if (error) throw error;
                 console.log("Login realizado com sucesso!");
             } catch (e) {
                 console.error("Login error:", e);
-                alert("Erro ao entrar: " + e.message);
+                alert("Erro ao entrar: " + (e.message || "Credenciais inválidas"));
                 showToast("Erro ao entrar: " + e.message);
             } finally {
                 loader.style.display = 'none';
             }
         });
 
-        // Logout
-        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+        // Global Event Delegation (for static elements)
+        document.addEventListener('click', (e) => {
+            const btnLogout = e.target.closest('#btn-logout');
+            const btnNewClient = e.target.closest('#btn-new-client');
+            const btnCancel = e.target.closest('#btn-cancel');
+            const btnCloseModal = e.target.closest('#close-modal');
+            const btnAddLink = e.target.closest('#btn-add-link');
 
-        // Real-time Clients Listener
-        let unsubscribe = null;
-        function loadClients() {
-            console.log("Iniciando listener em tempo real...");
-            if (unsubscribe) unsubscribe();
-
-            const q = query(collection(db, 'clients'));
-            
-            unsubscribe = onSnapshot(q, (snap) => {
-                const list = document.getElementById('client-list');
-                list.innerHTML = '';
-                
-                if (snap.empty) {
-                    list.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:20px;">Nenhum cliente cadastrado.</p>';
-                    return;
-                }
-
-                snap.forEach(docSnap => {
-                    const client = docSnap.data();
-                    const card = document.createElement('div');
-                    card.className = 'client-card';
-                    const viewUrl = `linkbio.html?client=${docSnap.id}`;
-                    
-                    card.innerHTML = `
-                        <div class="client-info">
-                            ${client.logo ? `<img src="${client.logo}" class="client-logo">` : `<div class="client-logo" style="display:flex;align-items:center;justify-content:center;background:var(--surface-light);color:var(--primary);font-weight:800">${(client.name || 'C')[0]}</div>`}
-                            <div class="client-details">
-                                <h3>${client.name || 'Sem nome'}</h3>
-                                <a href="${viewUrl}" target="_blank" style="font-size: 12px; color: var(--primary); text-decoration: none;">
-                                    <i class="fas fa-external-link-alt"></i> /${docSnap.id}
-                                </a>
-                            </div>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:12px;">
-                            <span class="client-status status-${client.status || 'active'}">${client.status || 'active'}</span>
-                            <button class="btn btn-outline btn-edit" data-slug="${docSnap.id}">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <button class="btn btn-danger btn-delete" data-slug="${docSnap.id}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    `;
-                    list.appendChild(card);
-                });
-            }, (error) => {
-                console.error("Erro no listener:", error);
-                showToast("Erro ao sincronizar dados.");
-            });
-        }
-
-        // Global Event Delegation for Client List
-        document.getElementById('client-list').addEventListener('click', (e) => {
-            const btnEdit = e.target.closest('.btn-edit');
-            const btnDelete = e.target.closest('.btn-delete');
-            
-            if (btnEdit) {
-                const slug = btnEdit.getAttribute('data-slug');
-                editClient(slug);
-            } else if (btnDelete) {
-                const slug = btnDelete.getAttribute('data-slug');
-                deleteClient(slug);
+            if (btnLogout) {
+                supabase.auth.signOut();
+            } else if (btnNewClient) {
+                document.getElementById('client-form').reset();
+                document.getElementById('edit-slug').value = '';
+                document.getElementById('client-slug').value = '';
+                document.getElementById('client-slug').disabled = false;
+                document.getElementById('links-list').innerHTML = '';
+                document.getElementById('modal-title').innerText = 'Novo Cliente';
+                document.getElementById('logo-preview').innerHTML = `<i class="fas fa-image" style="color: var(--text-muted);"></i>`;
+                modal.style.display = 'flex';
+            } else if (btnCancel || btnCloseModal) {
+                closeModal();
+            } else if (btnAddLink) {
+                addLinkRow();
             }
         });
 
-        // Modal Logic
-        const modal = document.getElementById('client-modal');
-        const closeModal = () => {
-            modal.style.display = 'none';
-            document.getElementById('client-form').reset();
-            document.getElementById('links-list').innerHTML = '';
-        };
+        // Real-time Clients Listener
+        let channel = null;
+        async function loadClients() {
+            console.log("Iniciando carregamento de clientes...");
+            
+            const { data: clients, error } = await supabase
+                .from('clients')
+                .select('*')
+                .order('updated_at', { ascending: false });
 
-        document.getElementById('btn-new-client').onclick = () => {
-            document.getElementById('client-form').reset();
-            document.getElementById('edit-slug').value = '';
-            document.getElementById('client-slug').value = '';
-            document.getElementById('client-slug').disabled = false;
-            document.getElementById('links-list').innerHTML = '';
-            document.getElementById('modal-title').innerText = 'Novo Cliente';
-            modal.style.display = 'flex';
-        };
+            if (error) {
+                console.error("Erro ao carregar clientes:", error);
+                showToast("Erro ao carregar dados.");
+                return;
+            }
 
-        document.getElementById('close-modal').onclick = closeModal;
-        document.getElementById('btn-cancel').onclick = closeModal;
+            renderClients(clients);
 
-        // Link Management
-        document.getElementById('btn-add-link').onclick = () => addLinkRow();
+            // Setup Realtime
+            if (channel) supabase.removeChannel(channel);
+            
+            channel = supabase.channel('clients-changes')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'clients' }, () => {
+                    loadClients();
+                })
+                .subscribe();
+        }
+
+        function renderClients(clients) {
+            const list = document.getElementById('client-list');
+            if (!list) return;
+            list.innerHTML = '';
+            
+            if (!clients || clients.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:20px;">Nenhum cliente cadastrado.</p>';
+                return;
+            }
+
+            clients.forEach(client => {
+                const card = document.createElement('div');
+                card.className = 'client-card';
+                card.innerHTML = `
+                    <div class="client-info">
+                        ${client.logo ? `<img src="${client.logo}" class="client-logo">` : `<div class="client-logo" style="display:flex;align-items:center;justify-content:center;background:var(--surface-light);color:var(--primary);font-weight:800">${(client.name || 'C')[0]}</div>`}
+                        <div class="client-details">
+                            <h3>${client.name || 'Sem nome'}</h3>
+                            <a href="linkbio.html#${client.slug}" target="_blank" style="font-size: 12px; color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                                <i class="fas fa-external-link-alt"></i> linkbio.html#${client.slug}
+                            </a>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <span class="client-status status-${client.status || 'active'}">${client.status || 'active'}</span>
+                        <button class="btn btn-outline btn-edit" data-slug="${client.slug}">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button class="btn btn-danger btn-delete" data-slug="${client.slug}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+                // Adiciona listeners diretamente aos botões para máxima confiabilidade
+                card.querySelector('.btn-edit').onclick = (e) => {
+                    e.stopPropagation();
+                    console.log("Edit clicado:", client.slug);
+                    window.editClient(client.slug);
+                };
+                card.querySelector('.btn-delete').onclick = (e) => {
+                    e.stopPropagation();
+                    console.log("Delete clicado:", client.slug);
+                    window.deleteClient(client.slug);
+                };
+
+                list.appendChild(card);
+            });
+        }
+        window.renderClients = renderClients;
 
         function addLinkRow(link = { type: 'whatsapp', label: '', url: '' }) {
             const list = document.getElementById('links-list');
@@ -561,6 +593,24 @@
             list.appendChild(row);
         }
 
+        // Logo Preview & Clear
+        document.getElementById('client-logo-file').onchange = e => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    document.getElementById('logo-preview').innerHTML = `<img src="${ev.target.result}" style="width:100%; height:100%; object-fit:contain;">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        document.getElementById('client-logo').oninput = e => {
+            if (e.target.value) {
+                document.getElementById('logo-preview').innerHTML = `<img src="${e.target.value}" style="width:100%; height:100%; object-fit:contain;">`;
+            }
+        };
+
         // Color Sync
         document.getElementById('client-accent').oninput = e => document.getElementById('client-accent-text').value = e.target.value;
         document.getElementById('client-bg').oninput = e => document.getElementById('client-bg-text').value = e.target.value;
@@ -578,21 +628,44 @@
             btnSave.disabled = true;
 
             try {
-                // Saneamento do Slug: minúsculo, sem espaços, apenas letras, números e hífens
                 let slug = document.getElementById('client-slug').value.trim().toLowerCase();
                 slug = slug.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
                 
                 const name = document.getElementById('client-name').value.trim();
-                const logo = document.getElementById('client-logo').value.trim();
+                const fileInput = document.getElementById('client-logo-file');
+                let logo = document.getElementById('client-logo').value.trim();
+                
+                // Upload image if file is selected
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${slug}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+                    const filePath = `logos/${fileName}`;
+
+                    console.log("Fazendo upload da logo...", filePath);
+                    
+                    const { data: uploadData, error: uploadError } = await supabase.storage
+                        .from('logos')
+                        .upload(filePath, file, { upsert: true });
+
+                    if (uploadError) throw new Error("Erro no upload da imagem: " + uploadError.message);
+
+                    const { data: publicUrlData } = supabase.storage
+                        .from('logos')
+                        .getPublicUrl(filePath);
+                    
+                    logo = publicUrlData.publicUrl;
+                }
+
                 const description = document.getElementById('client-desc').value.trim();
-                const accentColor = document.getElementById('client-accent-text').value.trim();
-                const bgColor = document.getElementById('client-bg-text').value.trim();
+                const accent_color = document.getElementById('client-accent-text').value.trim();
+                const bg_color = document.getElementById('client-bg-text').value.trim();
                 const status = document.getElementById('client-status').value;
 
                 if (!slug) throw new Error("Slug inválido. Use apenas letras e números.");
                 if (!name) throw new Error("Nome do cliente é obrigatório.");
 
-                console.log("Enviando dados para o Firebase...", slug);
+                console.log("Enviando dados para o Supabase...", slug);
 
                 const links = [];
                 document.querySelectorAll('.link-row').forEach(row => {
@@ -603,26 +676,23 @@
                 });
 
                 const clientData = {
-                    name, logo, description, accentColor, bgColor, status, links,
-                    updatedAt: new Date().toISOString()
+                    slug, name, logo, description, accent_color, bg_color, status, links,
+                    updated_at: new Date().toISOString()
                 };
 
-                // Aguarda confirmação real do banco de dados
-                await setDoc(doc(db, 'clients', slug), clientData);
-                
-                // Verificação extra: tenta ler o dado logo após salvar
-                const verify = await getDoc(doc(db, 'clients', slug));
-                if (!verify.exists()) {
-                    throw new Error("O dado foi enviado, mas não pôde ser lido de volta. Verifique as regras de segurança do seu Firestore (devem permitir leitura/escrita pública).");
-                }
+                const { error } = await supabase
+                    .from('clients')
+                    .upsert(clientData);
 
-                console.log("Gravado e verificado com sucesso no Firestore!");
+                if (error) throw error;
+
+                console.log("Gravado com sucesso no Supabase!");
                 showToast("Cliente salvo com sucesso!");
                 
-                // Fecha o modal apenas após a confirmação
                 modal.style.display = 'none';
                 form.reset();
                 document.getElementById('links-list').innerHTML = '';
+                loadClients();
                 
             } catch (err) {
                 console.error("Erro fatal ao salvar:", err);
@@ -649,27 +719,41 @@
         async function editClient(slug) {
             console.log("Abrindo edição para:", slug);
             
-            // Feedback visual de carregamento no botão
-            const btn = document.querySelector(`.btn-edit[data-slug="${slug}"]`);
-            const originalContent = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            btn.disabled = true;
+            const btn = document.querySelector(`.btn-edit[data-slug="${slug}"]`) || 
+                        Array.from(document.querySelectorAll('.btn-edit')).find(b => b.onclick && b.onclick.toString().includes(slug));
+
+            const originalContent = btn ? btn.innerHTML : '<i class="fas fa-edit"></i>';
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                btn.disabled = true;
+            }
 
             try {
-                const snap = await getDoc(doc(db, 'clients', slug));
-                if (!snap.exists()) return showToast("Cliente não encontrado");
-                const data = snap.data();
+                const { data, error } = await supabase
+                    .from('clients')
+                    .select('*')
+                    .eq('slug', slug)
+                    .single();
+
+                if (error) throw error;
+                if (!data) return showToast("Cliente não encontrado");
 
                 document.getElementById('edit-slug').value = slug;
                 document.getElementById('client-slug').value = slug;
                 document.getElementById('client-slug').disabled = true;
                 document.getElementById('client-name').value = data.name || '';
                 document.getElementById('client-logo').value = data.logo || '';
+                if (data.logo) {
+                    document.getElementById('logo-preview').innerHTML = `<img src="${data.logo}" style="width:100%; height:100%; object-fit:contain;">`;
+                } else {
+                    document.getElementById('logo-preview').innerHTML = `<i class="fas fa-image" style="color: var(--text-muted);"></i>`;
+                }
+                document.getElementById('client-logo-file').value = '';
                 document.getElementById('client-desc').value = data.description || '';
-                document.getElementById('client-accent-text').value = data.accentColor || '#d1ff4d';
-                document.getElementById('client-accent').value = data.accentColor || '#d1ff4d';
-                document.getElementById('client-bg-text').value = data.bgColor || '#020b1c';
-                document.getElementById('client-bg').value = data.bgColor || '#020b1c';
+                document.getElementById('client-accent-text').value = data.accent_color || '#d1ff4d';
+                document.getElementById('client-accent').value = data.accent_color || '#d1ff4d';
+                document.getElementById('client-bg-text').value = data.bg_color || '#020b1c';
+                document.getElementById('client-bg').value = data.bg_color || '#020b1c';
                 document.getElementById('client-status').value = data.status || 'active';
 
                 const list = document.getElementById('links-list');
@@ -689,16 +773,38 @@
 
         // Delete Client
         async function deleteClient(slug) {
+            console.log("Tentando deletar:", slug);
             if (!confirm(`Tem certeza que deseja excluir o cliente ${slug}?`)) return;
             
+            const btn = document.querySelector(`.btn-delete[data-slug="${slug}"]`) || 
+                        Array.from(document.querySelectorAll('.btn-delete')).find(b => b.closest('.client-card').innerHTML.includes(slug));
+
+            const originalContent = btn ? btn.innerHTML : '<i class="fas fa-trash"></i>';
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                btn.disabled = true;
+            }
+
             console.log("Deleting client:", slug);
             try {
-                await deleteDoc(doc(db, 'clients', slug));
+                const { error } = await supabase
+                    .from('clients')
+                    .delete()
+                    .eq('slug', slug);
+
+                if (error) throw error;
+
                 showToast("Cliente excluído.");
                 loadClients();
             } catch (e) {
                 console.error("Error deleting client:", e);
+                alert("Erro ao excluir: " + (e.message || "Verifique suas permissões no Supabase."));
                 showToast("Erro ao excluir.");
+            } finally {
+                if (btn) {
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                }
             }
         }
 
@@ -714,6 +820,7 @@
         }
 
 
+        // Remove redundant assignments at the end
     </script>
 </body>
 </html>
