@@ -55,9 +55,10 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);colo
 #logo-text-right{clip-path:inset(0 0 0 50%)}
 .glow-line{position:absolute;top:-30%;left:50%;width:3px;height:160%;background:linear-gradient(to bottom,transparent 0%,color-mix(in srgb, var(--accent) 50%, transparent) 20%,#fff 50%,color-mix(in srgb, var(--accent) 50%, transparent) 80%,transparent 100%);box-shadow:0 0 10px 4px var(--accent),0 0 36px 10px color-mix(in srgb, var(--accent) 70%, transparent),0 0 70px 22px color-mix(in srgb, var(--accent) 35%, transparent);opacity:0;transform:translateX(-50%);z-index:11;transform-origin:center center;will-change:transform,opacity}
 #portal-flash{position:absolute;inset:0;background:radial-gradient(ellipse 55% 100% at 50% 50%,#fff 0%,var(--accent) 22%,color-mix(in srgb, var(--accent) 45%, transparent) 52%,transparent 72%);z-index:18;pointer-events:none;opacity:0}
-.scroll-hint{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);text-align:center;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.30);white-space:nowrap;z-index:12}
-.scroll-hint .chevron{margin-top:9px;font-size:13px;color:var(--accent);animation:bounce 2s ease-in-out infinite}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+.scroll-hint{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);text-align:center;display:flex;flex-direction:column;align-items:center;gap:15px;z-index:12}
+.enter-btn{background:var(--accent);color:#000;border:none;padding:14px 28px;border-radius:50px;font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;box-shadow:0 0 20px color-mix(in srgb, var(--accent) 40%, transparent);animation:pulseBtn 2s infinite}
+@keyframes pulseBtn{0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 40%, transparent)}70%{box-shadow:0 0 0 15px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.scroll-hint span{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.30);white-space:nowrap}
 #main-wrapper{position:relative;z-index:30;opacity:0;padding-bottom:20px}
 .top-reveal-area{width:100%;height:60vh;display:flex;justify-content:center;align-items:center;padding-top:40px}
 .reveal-logo{width:min(280px,60vw);height:auto;object-fit:contain;filter:drop-shadow(0 0 22px color-mix(in srgb, var(--accent), transparent 30%));animation:logoFloat 4s ease-in-out infinite}
@@ -130,6 +131,15 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);colo
   .icon-inner{width:90px;height:90px}
   .info-bar{grid-template-columns:repeat(4,1fr);max-width:720px;padding:0 20px 40px}
 }
+.search-container{padding:0 16px 20px;max-width:520px;margin:0 auto;position:relative}
+.search-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:15px;padding:14px 18px 14px 44px;color:#fff;font-family:inherit;outline:none;transition:all .2s}
+.search-input:focus{background:rgba(255,255,255,.08);border-color:var(--accent);box-shadow:0 0 20px rgba(0,0,0,0.2)}
+.search-icon{position:absolute;left:32px;top:15px;color:var(--muted);font-size:14px}
+.back-to-top{position:fixed;bottom:20px;right:20px;width:44px;height:44px;background:var(--accent);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;opacity:0;transform:translateY(20px);transition:all .3s;z-index:100}
+.back-to-top.visible{opacity:1;transform:translateY(0)}
+.welcome-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:rgba(255,255,255,0.1);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.15);padding:12px 24px;border-radius:50px;display:flex;align-items:center;gap:12px;z-index:5000;transition:transform .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);white-space:nowrap}
+.welcome-toast.visible{transform:translateX(-50%) translateY(0)}
+.welcome-toast i{color:var(--accent)}
 .loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
 .loading-spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -193,7 +203,6 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);colo
 <div class="ambient-orb orb-2"></div>
 <div class="ambient-orb orb-3"></div>
 
-
 <section id="hero">
   <div class="floating-elements" id="particles"></div>
   <div class="logo-glow-bg"></div>
@@ -203,8 +212,20 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);colo
     <div class="glow-line" id="glow"></div>
   </div>
   <div id="portal-flash"></div>
-  <div class="scroll-hint">Role para explorar<div class="chevron"><i class="fas fa-chevron-down"></i></div></div>
+  <div class="scroll-hint">
+    <button class="enter-btn" id="enter-portal">Toque para Entrar</button>
+    <span>Ou role para baixo</span>
+  </div>
 </section>
+
+<div id="welcome-toast" class="welcome-toast">
+  <i class="fas fa-sparkles"></i>
+  <span id="welcome-text">Bem-vindo(a)!</span>
+</div>
+
+<div id="back-to-top" class="back-to-top">
+  <i class="fas fa-arrow-up"></i>
+</div>
 
 <div id="main-wrapper">
   <div class="top-reveal-area" id="top-reveal-area"></div>
@@ -212,6 +233,10 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);colo
     <div class="page-header-badge"><i class="fas fa-store"></i> Fale Conosco</div>
     <h2 class="page-title">Nossos <span class="accent" id="contacts-title">Contatos</span></h2>
     <p class="page-sub" id="contacts-sub">Escolha como deseja falar com a gente.</p>
+  </div>
+  <div class="search-container" id="search-box" style="display:none">
+    <i class="fas fa-search search-icon"></i>
+    <input type="text" id="link-search" class="search-input" placeholder="Buscar links...">
   </div>
   <div class="cards-grid" id="cards-grid"></div>
   <div class="info-bar" id="info-bar" style="display:none"></div>
@@ -250,7 +275,6 @@ const LINK_ICONS = {
   email: {icon:'fas fa-envelope', img:`${STORAGE_URL}/MENSA.png`, color:'#f59e0b', cat:'E-MAIL', cta:'Enviar E-mail'},
 };
 
-// Helper to mix colors for CSS
 function colorMix(base, overlay, percent) {
   return `color-mix(in srgb, ${base}, ${overlay} ${percent}%)`;
 }
@@ -258,332 +282,119 @@ function colorMix(base, overlay, percent) {
 async function loadClient() {
   const params = new URLSearchParams(window.location.search);
   const slug = params.get('client') || window.location.hash.substring(1);
-
   if (!slug) {
     showError("Por favor, especifique um cliente na URL (ex: linkbio.html#slug)");
     return;
   }
-
   try {
-    const { data, error } = await supabase
-      .from('clients')
-      .select('*')
-      .eq('slug', slug)
-      .single();
-
-    if (error) {
-      showError(`O cliente "${slug}" não foi encontrado no banco de dados.`);
-      return;
-    }
-    
-    if (data.status !== 'active') {
-      showError("Este link bio está desativado no momento.");
-      return;
-    }
+    const { data, error } = await supabase.from('clients').select('*').eq('slug', slug).single();
+    if (error) { showError(`O cliente "${slug}" não foi encontrado.`); return; }
+    if (data.status !== 'active') { showError("Este link bio está desativado."); return; }
     buildPage(data);
-  } catch(e) {
-    console.error("Erro ao carregar:", e);
-    showError(`Erro de conexão com o Supabase: ${e.message}.`);
-  }
+  } catch(e) { showError(`Erro de conexão: ${e.message}.`); }
 }
 
 function showError(msg) {
   document.getElementById('loading-screen').style.display = 'none';
   const errorScreen = document.getElementById('error-screen');
   errorScreen.style.display = 'flex';
-  if (msg) {
-    errorScreen.querySelector('p').innerText = msg;
-  }
+  errorScreen.querySelector('p').innerText = msg;
 }
 
 function buildPage(data) {
   const accent = data.accent_color || (data.theme === 'light' ? '#4d8fff' : '#d1ff4d');
   const bg = data.bg_color || (data.theme === 'light' ? '#f8f9fa' : '#050505');
-
-  if (data.theme === 'light') {
-    document.body.classList.add('light-theme');
-  } else {
-    document.body.classList.remove('light-theme');
-  }
-
-  // CSS vars
+  if (data.theme === 'light') document.body.classList.add('light-theme');
   document.documentElement.style.setProperty('--accent', accent);
   document.documentElement.style.setProperty('--bg', bg);
-  
-  // Calculate soft bg for hero
-  const softBg = data.theme === 'light' ? '#e9ecef' : colorMix(bg, accent, 15);
-  document.documentElement.style.setProperty('--bg-soft', softBg);
-  
-  // Update Orbs
-  document.querySelectorAll('.ambient-orb').forEach((orb, i) => {
-    orb.style.background = `radial-gradient(circle, ${accent}${i === 0 ? '44' : '22'} 0%, transparent 70%)`;
-  });
-
-  // Update Logo Glow and Reveal
-  const logoGlow = document.querySelector('.logo-glow-bg');
-  if (logoGlow) {
-    logoGlow.style.background = `radial-gradient(circle, ${accent}55 0%, ${accent}22 35%, ${accent}0a 60%, transparent 75%)`;
-  }
-  
-  const revealLogo = document.querySelector('.reveal-logo');
-  if (revealLogo) {
-    revealLogo.style.filter = `drop-shadow(0 0 35px ${accent})`;
-  }
-
-  // Update Animation Elements (Glow Line and Portal Flash)
-  const glowLine = document.getElementById('glow');
-  if (glowLine) {
-    glowLine.style.background = `linear-gradient(to bottom, transparent 0%, ${accent}88 20%, #fff 50%, ${accent}88 80%, transparent 100%)`;
-    glowLine.style.boxShadow = `0 0 10px 4px ${accent}, 0 0 36px 10px ${accent}aa, 0 0 70px 22px ${accent}44`;
-  }
-
-  const portalFlash = document.getElementById('portal-flash');
-  if (portalFlash) {
-    portalFlash.style.background = `radial-gradient(ellipse 55% 100% at 50% 50%, #fff 0%, ${accent} 22%, ${accent}aa 52%, transparent 72%)`;
-  }
-
   document.title = data.name;
-  
-  // Dynamic PWA Manifest
-  const manifest = {
-    "name": data.name,
-    "short_name": data.name,
-    "start_url": window.location.href,
-    "display": "standalone",
-    "background_color": bg,
-    "theme_color": accent,
-    "icons": [{
-      "src": data.logo || "https://ejkoqkggtwkloukpekpv.supabase.co/storage/v1/object/public/logos/GRUPO.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }]
-  };
-  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-  const manifestURL = URL.createObjectURL(blob);
-  document.getElementById('manifest-link').setAttribute('href', manifestURL);
 
-  // Dynamic Meta Tags (Client-side update)
-  document.querySelector('meta[property="og:title"]').setAttribute('content', data.name);
-  document.querySelector('meta[property="og:description"]').setAttribute('content', data.description || 'Acesse nossos links oficiais.');
-  if (data.logo) {
-    document.querySelector('meta[property="og:image"]').setAttribute('content', data.logo);
-  }
-  // Dynamic Favicon with Aspect Ratio Protection
-  if (data.logo) {
-    const img = new Image();
-    img.crossOrigin = "Anonymous";
-    img.onload = function() {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const size = Math.max(img.width, img.height);
-      canvas.width = size;
-      canvas.height = size;
-      // Draw centered without stretching
-      const x = (size - img.width) / 2;
-      const y = (size - img.height) / 2;
-      ctx.drawImage(img, x, y);
-      
-      let favicon = document.querySelector("link[rel~='icon']");
-      if (!favicon) {
-        favicon = document.createElement('link');
-        favicon.rel = 'icon';
-        document.head.appendChild(favicon);
-      }
-      favicon.href = canvas.toDataURL("image/png");
-    };
-    img.src = data.logo;
+  if (data.welcome_message) {
+    document.getElementById('welcome-text').innerText = data.welcome_message;
+    setTimeout(() => {
+        document.getElementById('welcome-toast').classList.add('visible');
+        setTimeout(() => document.getElementById('welcome-toast').classList.remove('visible'), 4000);
+    }, 2000);
   }
 
-  // Dynamic Share Link
-  const shareBtn = document.querySelector('.header-cta-btn');
-  if (shareBtn) {
-    const currentUrl = window.location.href;
-    shareBtn.href = `https://wa.me/?text=Confira este link oficial: ${encodeURIComponent(currentUrl)}`;
-  }
-
-  // Header mini logo
+  // Header mini logo / Reveal logo / Footer Setup
   const headerLogo = document.getElementById('header-logo-container');
   if (data.logo) {
     headerLogo.innerHTML = `<img src="${data.logo}" alt="${data.name}" class="header-logo-mini">`;
-  } else {
-    headerLogo.innerHTML = `<div style="font-weight:900;font-size:14px;color:var(--accent)">${data.name}</div>`;
-  }
-
-
-  // Hero logo
-  if (data.logo) {
+    document.getElementById('top-reveal-area').innerHTML = `<img src="${data.logo}" alt="${data.name}" class="reveal-logo">`;
+    document.getElementById('footer-logo-wrap').innerHTML = `<img src="${data.logo}" alt="${data.name}" class="footer-logo">`;
     document.getElementById('logo-left-half').style.backgroundImage = `url('${data.logo}')`;
     document.getElementById('logo-right-half').style.backgroundImage = `url('${data.logo}')`;
-  } else {
-    // Text logo fallback
-    const lc = document.getElementById('logo-container');
-    lc.innerHTML = `
-      <div id="logo-left-half" class="logo-half logo-text-hero" style="clip-path:inset(0 50% 0 0);font-size:clamp(1.8rem,7vw,2.8rem)">${data.name}</div>
-      <div id="logo-right-half" class="logo-half logo-text-hero" style="clip-path:inset(0 0 0 50%);font-size:clamp(1.8rem,7vw,2.8rem)">${data.name}</div>
-      <div class="glow-line" id="glow"></div>
-    `;
   }
 
-  // Reveal logo
-  const topReveal = document.getElementById('top-reveal-area');
-  if (data.logo) {
-    topReveal.innerHTML = `<img src="${data.logo}" alt="${data.name}" class="reveal-logo">`;
-  } else {
-    topReveal.innerHTML = `<div class="reveal-logo-text" style="color:${accent}">${data.name}</div>`;
-  }
+  if ((data.links||[]).length >= 8) document.getElementById('search-box').style.display = 'block';
 
-  // Footer
-  const footerLogoWrap = document.getElementById('footer-logo-wrap');
-  if (data.logo) {
-    footerLogoWrap.innerHTML = `<img src="${data.logo}" alt="${data.name}" class="footer-logo">`;
-  } else {
-    footerLogoWrap.innerHTML = `<div class="footer-logo-text">${data.name}</div>`;
-  }
+  renderLinks(data.links, data.slug);
 
-  // Description
-  if (data.description) {
-    document.getElementById('contacts-sub').textContent = data.description;
-    document.getElementById('footer-tagline').innerHTML = `${data.description}`;
-  }
+  document.getElementById('link-search').oninput = (e) => {
+    const term = e.target.value.toLowerCase();
+    const filtered = data.links.filter(l => l.label.toLowerCase().includes(term));
+    renderLinks(filtered, data.slug);
+  };
+}
 
-  // Footer Info Bar
-  const infoBar = document.getElementById('info-bar');
-  const infoItems = [
-    { icon: 'fas fa-phone', label: 'CONTATO', value: data.footer_phone },
-    { icon: 'fas fa-map-marker-alt', label: 'LOCAL', value: data.footer_address },
-    { icon: 'fab fa-instagram', label: 'INSTAGRAM', value: data.footer_instagram },
-    { icon: 'fas fa-clock', label: 'HORÁRIO', value: data.footer_hours }
-  ].filter(item => item.value);
-
-  if (infoItems.length > 0) {
-    infoBar.style.display = 'grid';
-    infoBar.innerHTML = infoItems.map(item => `
-      <div class="info-item">
-        <i class="${item.icon}"></i>
-        <strong>${item.label}</strong>
-        <span>${item.value}</span>
-      </div>
-    `).join('');
-  } else {
-    infoBar.style.display = 'none';
-  }
-
-  // Cards
+function renderLinks(links, slug) {
   const grid = document.getElementById('cards-grid');
-  grid.innerHTML = (data.links||[]).map((link, i) => {
-    const info = LINK_ICONS[link.type] || {icon:'fas fa-link', color: accent, cat:'LINK', cta:'Acessar'};
-    const delay = (i % 2) * 60;
+  const now = new Date().getTime();
+  const activeLinks = (links||[]).filter(link => !link.expires_at || new Date(link.expires_at).getTime() > now);
+  grid.innerHTML = activeLinks.map((link, i) => {
+    const info = LINK_ICONS[link.type] || {icon:'fas fa-link', color: 'var(--accent)', cat:'LINK', cta:'Acessar'};
     return `
       <a href="${link.url}" class="card" target="_blank" rel="noopener" style="--card-color:${info.color}">
         <div class="card-accent-line"></div>
         <div class="card-body">
           <span class="card-cat">${info.cat}</span>
           <h3 class="card-name">${link.label}</h3>
-          <p class="card-desc">${link.description || getDesc(link.type)}</p>
+          <p class="card-desc">${link.description || 'Acesse para saber mais.'}</p>
           <span class="card-cta">${info.cta} <i class="fas fa-arrow-right"></i></span>
         </div>
-        <div class="card-icon-area" style="animation-delay:-${delay}ms">
+        <div class="card-icon-area">
           <div class="icon-placeholder">
             <div class="icon-glow" style="background:${info.color}"></div>
             <div class="icon-inner">
-              ${info.img ? `<div class="icon-img" style="background-image:url('${info.img}')" aria-label="${link.label}" loading="lazy"></div>` : `<i class="${info.icon}"></i>`}
+              ${info.img ? `<div class="icon-img" style="background-image:url('${info.img}')"></div>` : `<i class="${info.icon}"></i>`}
             </div>
           </div>
         </div>
       </a>
     `;
   }).join('');
-
-  document.getElementById('loading-screen').style.display = 'none';
   document.getElementById('skeleton-screen').style.display = 'none';
   initAnimations();
-  setupClickTracking(data.slug);
+  setupClickTracking(slug);
 }
-
 
 function setupClickTracking(slug) {
   document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('click', async (e) => {
+    card.addEventListener('click', () => {
+      if ('vibrate' in navigator) navigator.vibrate(50);
       const label = card.querySelector('.card-name').innerText;
-      const type = card.querySelector('.card-cat').innerText;
-      
-      console.log(`Tracking click: ${label} (${type})`);
-      
-      // Fire and forget (don't block the user)
-      supabase.from('clicks').insert([
-        { client_slug: slug, link_label: label, link_type: type }
-      ]).then(({error}) => {
-        if(error) console.warn("Analytics error:", error);
-      });
+      supabase.from('clicks').insert([{ client_slug: slug, link_label: label }]);
     });
   });
 }
 
-function getDesc(type) {
-  const descs = {
-    whatsapp: 'Fale com nossa equipe e receba as melhores ofertas.',
-    instagram: 'Acompanhe novidades e promoções nas nossas redes.',
-    phone: 'Fale diretamente com nossa equipe por telefone.',
-    maps: 'Veja no mapa onde estamos e encontre o caminho.',
-    website: 'Visite nosso site e confira o catálogo completo.',
-    group: 'Entre no grupo e receba promoções exclusivas.',
-    app: 'Baixe nosso aplicativo para iOS e Android.',
-    message: 'Envie uma mensagem para nossa equipe.',
-    email: 'Mande um e-mail para nossa equipe.',
-  };
-  return descs[type] || 'Acesse este link para mais informações.';
-}
-
 function initAnimations() {
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  window.scrollTo(0, 0);
-
-  // Particles
-  const container = document.getElementById('particles');
-  for (let i = 0; i < 18; i++) {
-    const el = document.createElement('div');
-    const size = Math.random() * 5 + 2;
-    const colors = ['rgba(80,160,255,0.5)','rgba(120,200,255,0.4)','rgba(180,220,255,0.35)','rgba(100,180,255,0.45)','rgba(209,255,77,0.25)'];
-    el.style.cssText = `position:absolute;left:${Math.random()*90+5}%;top:${Math.random()*90+5}%;width:${size}px;height:${size}px;border-radius:50%;background:${colors[Math.floor(Math.random()*colors.length)]};opacity:0`;
-    container.appendChild(el);
-    gsap.to(el, {opacity:1, duration:.8, delay:Math.random()*1.5});
-    gsap.to(el, {y:'random(-30,30)',x:'random(-20,20)',duration:'random(4,8)',repeat:-1,yoyo:true,ease:'sine.inOut',delay:Math.random()*3});
-  }
-
-  // Logo float
-  let floatAnim = gsap.to('#logo-container', {y:-10,rotation:.5,duration:2.5,repeat:-1,yoyo:true,ease:'sine.inOut'});
+  
+  // Floating animation for logo
+  const floatAnim = gsap.to('#logo-container', {y:-15, duration:2.5, repeat:-1, yoyo:true, ease:'sine.inOut'});
 
   const tl = gsap.timeline({paused:true, onComplete: () => {
     document.body.style.overflow = 'auto';
   }});
 
-  gsap.set('#portal-flash', {opacity:0});
-  gsap.set('#glow', {opacity:0});
-  gsap.set('#main-wrapper', {opacity:0,y:100});
-  gsap.set(['#logo-left-half','#logo-right-half'], {filter:'brightness(1) saturate(1)'});
-
-  tl.to('.scroll-hint', {opacity:0,y:20,duration:.3,ease:'power2.in'})
-    .to('.logo-glow-bg', {scale:2,opacity:1,duration:.6,ease:'power2.inOut'}, 0)
-    .to('#logo-container', {scale:1.15,duration:.6,ease:'power1.inOut'}, 0)
+  tl.to('.scroll-hint', {opacity:0,y:20,duration:.3})
+    .to('.logo-glow-bg', {scale:2,opacity:1,duration:.6}, 0)
+    .to('#logo-container', {scale:1.15,duration:.6}, 0)
     .to('#logo-container', {scale:80,duration:1.2,ease:'power4.in'}, .6)
-    .to(['#logo-left-half','#logo-right-half'], {filter:'brightness(2.5) saturate(1.5)',duration:.8,ease:'power2.in'}, .6)
-    .to('#glow', {opacity:1,duration:.15,ease:'none'}, 1.6)
-    .to('#portal-flash', {opacity:1,duration:.1,ease:'power4.in'}, 1.7)
-    .to('#logo-left-half', {x:'-250vw',rotate:-20,duration:1.2,ease:'power3.inOut'}, 1.7)
-    .to('#logo-right-half', {x:'250vw',rotate:20,duration:1.2,ease:'power3.inOut'}, 1.7)
-    .to('#hero', {opacity:0,duration:.7,ease:'power2.inOut', onStart:()=>gsap.set('#main-wrapper',{opacity:1})}, 2.2)
-    .to('#main-wrapper', {y:0,duration:1.0,ease:'power3.out'}, 2.3)
-    .to('#portal-flash', {opacity:0,duration:1.0,ease:'power2.out'}, 2.2)
-    .set('#hero', {display:'none'});
-
-  // Sticky Header Scroll Trigger
-  ScrollTrigger.create({
-    trigger: '#main-wrapper',
-    start: 'top top',
-    onEnter: () => document.getElementById('sticky-header').classList.add('visible'),
-    onLeaveBack: () => document.getElementById('sticky-header').classList.remove('visible'),
-  });
+    .to('#hero', {opacity:0,duration:.6,display:'none'}, 2.3)
+    .to('#main-wrapper', {opacity:1,y:0,duration:1}, 2.4);
 
   let played = false;
   function play() {
@@ -593,13 +404,25 @@ function initAnimations() {
     tl.play();
   }
 
-  document.body.style.overflow = 'hidden';
+  document.getElementById('enter-portal').onclick = (e) => { e.stopPropagation(); play(); };
+  document.getElementById('hero').onclick = play;
   
-  // Auto-play after a short delay for a premium feel
-  setTimeout(play, 1000);
+  ScrollTrigger.create({
+    trigger: '#hero',
+    start: 'top top',
+    onEnter: () => document.getElementById('sticky-header').classList.add('visible'),
+    onLeaveBack: () => document.getElementById('sticky-header').classList.remove('visible'),
+  });
 
-  // Still allow click to skip delay
-  document.getElementById('hero').addEventListener('click', play);
+  ScrollTrigger.create({
+    trigger: '#hero',
+    start: 'top top',
+    end: '+=100',
+    onLeave: play,
+    once: true
+  });
+
+  document.body.style.overflow = 'hidden';
 
   // Card animations
   document.querySelectorAll('.card').forEach((card, i) => {

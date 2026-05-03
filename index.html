@@ -442,6 +442,11 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label>Mensagem de Boas-vindas (Popup)</label>
+                    <input type="text" id="client-welcome" class="form-control" placeholder="Ex: Bem-vindo! Fale conosco agora.">
+                </div>
+
                 <div class="color-inputs">
                     <div class="form-group">
                         <label>Cor de Destaque</label>
@@ -726,9 +731,10 @@
                 <select class="form-control link-type">
                     ${LINK_TYPES.map(t => `<option value="${t.id}" ${link.type === t.id ? 'selected' : ''}>${t.label}</option>`).join('')}
                 </select>
-                <input type="text" class="form-control link-label" placeholder="Rótulo" value="${link.label}">
-                <input type="text" class="form-control link-desc" placeholder="Descrição (Opcional)" value="${link.description || ''}">
-                <input type="text" class="form-control link-url" placeholder="URL" value="${link.url}">
+                <input type="text" id="link-label-${Date.now()}" class="form-control link-label" placeholder="Rótulo" value="${link.label}">
+                <input type="text" id="link-desc-${Date.now()}" class="form-control link-desc" placeholder="Descrição" value="${link.description || ''}">
+                <input type="text" id="link-url-${Date.now()}" class="form-control link-url" placeholder="URL" value="${link.url}">
+                <input type="datetime-local" id="link-expire-${Date.now()}" class="form-control link-expire" value="${link.expires_at || ''}" title="Data de Expiração">
                 <button type="button" class="btn btn-danger btn-remove-link" style="padding:0; width:44px; height:44px; justify-content:center;">
                     <i class="fas fa-times"></i>
                 </button>
@@ -810,6 +816,7 @@
                     footer_address: document.getElementById('footer-address').value,
                     footer_instagram: document.getElementById('footer-instagram').value,
                     footer_hours: document.getElementById('footer-hours').value,
+                    welcome_message: document.getElementById('client-welcome').value.trim(),
                     accent_color: document.getElementById('client-accent-text').value.trim(),
                     bg_color: document.getElementById('client-bg-text').value.trim(),
                     status: document.getElementById('client-status').value,
@@ -829,7 +836,8 @@
                     const label = row.querySelector('.link-label').value.trim();
                     const description = row.querySelector('.link-desc').value.trim();
                     const url = row.querySelector('.link-url').value.trim();
-                    if (label || url) links.push({ type, label, description, url });
+                    const expires_at = row.querySelector('.link-expire').value;
+                    if (label || url) links.push({ type, label, description, url, expires_at });
                 });
                 clientData.links = links;
 
@@ -903,6 +911,7 @@
                 document.getElementById('footer-address').value = data.footer_address || '';
                 document.getElementById('footer-instagram').value = data.footer_instagram || '';
                 document.getElementById('footer-hours').value = data.footer_hours || '';
+                document.getElementById('client-welcome').value = data.welcome_message || '';
                 document.getElementById('client-accent-text').value = data.accent_color || '#d1ff4d';
                 document.getElementById('client-accent').value = data.accent_color || '#d1ff4d';
                 document.getElementById('client-bg-text').value = data.bg_color || '#020b1c';
