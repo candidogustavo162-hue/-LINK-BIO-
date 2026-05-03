@@ -10,8 +10,9 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Link Bio Profissional">
 <meta property="og:description" content="Acesse todos os links oficiais em um só lugar.">
-<meta property="og:image" content="https://ejkoqkggtwkloukpekpv.supabase.co/storage/v1/object/public/logos/WHA.png">
+<meta property="og:image" content="https://ejkoqkggtwkloukpekpv.supabase.co/storage/v1/object/public/logos/GRUPO.png">
 
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -304,6 +305,23 @@ function buildPage(data) {
   if (data.logo) {
     document.querySelector('meta[property="og:image"]').setAttribute('content', data.logo);
   }
+  // Dynamic Favicon
+  if (data.logo) {
+    let favicon = document.querySelector("link[rel~='icon']");
+    if (!favicon) {
+      favicon = document.createElement('link');
+      favicon.rel = 'icon';
+      document.head.appendChild(favicon);
+    }
+    favicon.href = data.logo;
+  }
+
+  // Dynamic Share Link
+  const shareBtn = document.querySelector('.header-cta-btn');
+  if (shareBtn) {
+    const currentUrl = window.location.href;
+    shareBtn.href = `https://wa.me/?text=Confira este link oficial: ${encodeURIComponent(currentUrl)}`;
+  }
 
   // Header mini logo
   const headerLogo = document.getElementById('header-logo-container');
@@ -401,6 +419,25 @@ function buildPage(data) {
   document.getElementById('loading-screen').style.display = 'none';
   document.getElementById('skeleton-screen').style.display = 'none';
   initAnimations();
+  setupClickTracking(data.slug);
+}
+
+function setupClickTracking(slug) {
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', async (e) => {
+      const label = card.querySelector('.card-name').innerText;
+      const type = card.querySelector('.card-cat').innerText;
+      
+      console.log(`Tracking click: ${label} (${type})`);
+      
+      // Fire and forget (don't block the user)
+      supabase.from('clicks').insert([
+        { client_slug: slug, link_label: label, link_type: type }
+      ]).then(({error}) => {
+        if(error) console.warn("Analytics error:", error);
+      });
+    });
+  });
 }
 
 function getDesc(type) {

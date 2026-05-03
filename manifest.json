@@ -1,0 +1,17 @@
+{
+  "name": "Link Bio Profissional",
+  "short_name": "LinkBio",
+  "description": "Seus links oficiais em um só lugar.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#d1ff4d",
+  "icons": [
+    {
+      "src": "https://ejkoqkggtwkloukpekpv.supabase.co/storage/v1/object/public/logos/WHA.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
