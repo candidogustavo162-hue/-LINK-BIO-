@@ -336,8 +336,27 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Descrição</label>
+                    <label>Descrição (Tagline)</label>
                     <textarea id="client-desc" class="form-control" rows="2" placeholder="Fale com nossa equipe..."></textarea>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border: 1px solid var(--border); padding: 15px; border-radius: var(--radius); margin-bottom: 20px;">
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label>Telefone Rodapé</label>
+                        <input type="text" id="footer-phone" class="form-control" placeholder="(00) 00000-0000">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label>Local Rodapé</label>
+                        <input type="text" id="footer-address" class="form-control" placeholder="Cidade - UF">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Instagram Rodapé</label>
+                        <input type="text" id="footer-instagram" class="form-control" placeholder="@usuario">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Horário Rodapé</label>
+                        <input type="text" id="footer-hours" class="form-control" placeholder="Seg a Sex: 08h às 18h">
+                    </div>
                 </div>
 
                 <div class="color-inputs">
@@ -657,10 +676,21 @@
                     logo = publicUrlData.publicUrl;
                 }
 
-                const description = document.getElementById('client-desc').value.trim();
-                const accent_color = document.getElementById('client-accent-text').value.trim();
-                const bg_color = document.getElementById('client-bg-text').value.trim();
-                const status = document.getElementById('client-status').value;
+                const clientData = {
+                    slug, 
+                    name, 
+                    logo, 
+                    description: document.getElementById('client-desc').value,
+                    footer_phone: document.getElementById('footer-phone').value,
+                    footer_address: document.getElementById('footer-address').value,
+                    footer_instagram: document.getElementById('footer-instagram').value,
+                    footer_hours: document.getElementById('footer-hours').value,
+                    accent_color: document.getElementById('client-accent-text').value.trim(),
+                    bg_color: document.getElementById('client-bg-text').value.trim(),
+                    status: document.getElementById('client-status').value,
+                    links: [],
+                    updated_at: new Date().toISOString()
+                };
 
                 if (!slug) throw new Error("Slug inválido. Use apenas letras e números.");
                 if (!name) throw new Error("Nome do cliente é obrigatório.");
@@ -674,26 +704,18 @@
                     const url = row.querySelector('.link-url').value.trim();
                     if (label || url) links.push({ type, label, url });
                 });
+                clientData.links = links;
 
-                const clientData = {
-                    slug, name, logo, description, accent_color, bg_color, status, links,
-                    updated_at: new Date().toISOString()
-                };
-
-                const { error } = await supabase
+                const { error: saveError } = await supabase
                     .from('clients')
                     .upsert(clientData);
 
-                if (error) throw error;
+                if (saveError) throw saveError;
 
-                console.log("Gravado com sucesso no Supabase!");
+                console.log("Salvo com sucesso!");
                 showToast("Cliente salvo com sucesso!");
-                
-                modal.style.display = 'none';
-                form.reset();
-                document.getElementById('links-list').innerHTML = '';
+                closeModal();
                 loadClients();
-                
             } catch (err) {
                 console.error("Erro fatal ao salvar:", err);
                 alert("ERRO AO SALVAR: " + err.message);
@@ -750,6 +772,10 @@
                 }
                 document.getElementById('client-logo-file').value = '';
                 document.getElementById('client-desc').value = data.description || '';
+                document.getElementById('footer-phone').value = data.footer_phone || '';
+                document.getElementById('footer-address').value = data.footer_address || '';
+                document.getElementById('footer-instagram').value = data.footer_instagram || '';
+                document.getElementById('footer-hours').value = data.footer_hours || '';
                 document.getElementById('client-accent-text').value = data.accent_color || '#d1ff4d';
                 document.getElementById('client-accent').value = data.accent_color || '#d1ff4d';
                 document.getElementById('client-bg-text').value = data.bg_color || '#020b1c';

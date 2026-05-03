@@ -297,6 +297,27 @@ function buildPage(data) {
     document.getElementById('footer-tagline').innerHTML = `${data.description}`;
   }
 
+  // Footer Info Bar
+  const infoBar = document.getElementById('info-bar');
+  const infoItems = [
+    { icon: 'fas fa-phone', label: 'CONTATO', value: data.footer_phone },
+    { icon: 'fas fa-map-marker-alt', label: 'LOCAL', value: data.footer_address },
+    { icon: 'fab fa-instagram', label: 'INSTAGRAM', value: data.footer_instagram },
+    { icon: 'fas fa-clock', label: 'HORÁRIO', value: data.footer_hours }
+  ].filter(item => item.value);
+
+  if (infoItems.length > 0) {
+    infoBar.style.display = 'grid';
+    infoBar.innerHTML = infoItems.map(item => `
+      <div class="info-item">
+        <i class="${item.icon}"></i>
+        <strong>${item.label}</strong>
+        <span>${item.value}</span>
+      </div>
+    `).join('');
+  } else {
+    infoBar.style.display = 'none';
+  }
 
   // Cards
   const grid = document.getElementById('cards-grid');
@@ -365,7 +386,7 @@ function initAnimations() {
 
   const tl = gsap.timeline({paused:true, onComplete: () => {
     document.body.style.overflow = 'auto';
-    gsap.to(window, {scrollTo:{y:'#contacts-anchor',autoKill:false},duration:3.5,ease:'power1.inOut',delay:.2});
+    // Removed auto-scroll to contacts
   }});
 
   gsap.set('#portal-flash', {opacity:0});
