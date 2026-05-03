@@ -38,13 +38,13 @@ body.light-theme {
 html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 #bg-layer{position:fixed;inset:0;background:url('bg.png') center/cover no-repeat;opacity:0.08;z-index:-2}
 .ambient-orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:-1;opacity:.28}
-.orb-1{width:55vw;height:55vw;top:-15vw;left:-10vw;background:radial-gradient(circle,color-mix(in srgb, var(--accent) 40%, #1a4fff) 0%,transparent 70%)}
-.orb-2{width:45vw;height:45vw;top:30vh;right:-15vw;background:radial-gradient(circle,color-mix(in srgb, var(--accent) 30%, #0e2fa0) 0%,transparent 70%);opacity:.18}
-.orb-3{width:60vw;height:60vw;bottom:-20vw;left:10vw;background:radial-gradient(circle,color-mix(in srgb, var(--accent) 20%, #102060) 0%,transparent 70%);opacity:.22}
+.orb-1{width:55vw;height:55vw;top:-15vw;left:-10vw;background:radial-gradient(circle,rgba(60,120,255,0.18) 0%,transparent 70%)}
+.orb-2{width:45vw;height:45vw;top:30vh;right:-15vw;background:radial-gradient(circle,rgba(30,80,200,0.12) 0%,transparent 70%);opacity:.8}
+.orb-3{width:60vw;height:60vw;bottom:-20vw;left:10vw;background:radial-gradient(circle,rgba(20,60,160,0.10) 0%,transparent 70%);opacity:.8}
 .vignette{position:fixed;inset:0;background:radial-gradient(ellipse 100% 80% at 50% 35%,transparent 15%,var(--bg) 78%);z-index:0;pointer-events:none}
 #hero{height:100vh;width:100%;position:fixed;top:0;left:0;display:flex;justify-content:center;align-items:center;overflow:hidden;z-index:2000;background:radial-gradient(ellipse 160% 110% at 50% 60%, var(--bg-soft, #0f0f0f) 0%, var(--bg, #050505) 65%)}
-.logo-glow-bg{position:absolute;width:72vw;height:72vw;max-width:420px;max-height:420px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb, var(--accent) 32%, transparent) 0%,color-mix(in srgb, var(--accent) 16%, transparent) 35%,color-mix(in srgb, var(--accent) 6%, transparent) 60%,transparent 75%);z-index:8;pointer-events:none;animation:logoPulse 3.5s ease-in-out infinite}
-@keyframes logoPulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+.logo-glow-bg{position:absolute;width:88vw;height:88vw;max-width:520px;max-height:520px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.22) 0%,rgba(255,255,255,0.10) 12%,var(--accent-glow-mid) 28%,var(--accent-glow-out) 50%,transparent 72%);z-index:8;pointer-events:none;animation:logoPulse 2.8s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.14)}}
 .floating-elements{position:absolute;inset:0;pointer-events:none;z-index:5}
 .logo-container{position:relative;width:min(360px,78vw);aspect-ratio:320/170;z-index:10;transform-origin:center center;will-change:transform}
 .logo-half{position:absolute;inset:0;background-size:contain;background-repeat:no-repeat;background-position:center;will-change:transform,filter}
@@ -60,9 +60,18 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);colo
 @keyframes pulseBtn{0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 40%, transparent)}70%{box-shadow:0 0 0 15px transparent}100%{box-shadow:0 0 0 0 transparent}}
 .scroll-hint span{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.30);white-space:nowrap}
 #main-wrapper{position:relative;z-index:30;opacity:0;padding-bottom:20px}
-.top-reveal-area{width:100%;height:60vh;display:flex;justify-content:center;align-items:center;padding-top:40px}
-.reveal-logo{width:min(280px,60vw);height:auto;object-fit:contain;filter:drop-shadow(0 0 22px color-mix(in srgb, var(--accent), transparent 30%));animation:logoFloat 4s ease-in-out infinite}
-.reveal-logo-text{font-size:clamp(2.5rem,10vw,4rem);font-weight:900;letter-spacing:-.03em;animation:logoFloat 4s ease-in-out infinite}
+.reveal-logo{
+  width:min(320px,70vw);
+  height:auto;
+  object-fit:contain;
+  filter:drop-shadow(0 0 40px rgba(255,255,255,0.15)) drop-shadow(0 0 80px var(--accent));
+  animation:logoFloat 4s ease-in-out infinite;
+  position:relative;
+  z-index:10;
+}
+.reveal-logo-text{font-size:clamp(2.5rem,10vw,4rem);font-weight:900;letter-spacing:-.03em;animation:logoFloat 4s ease-in-out infinite;position:relative;z-index:10}
+.top-reveal-area{width:100%;height:60vh;display:flex;justify-content:center;align-items:center;padding-top:40px;position:relative}
+.reveal-glow{position:absolute;width:120vw;height:120vw;max-width:800px;max-height:800px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow-mid) 0%,var(--accent-glow-out) 40%,transparent 70%);z-index:1;opacity:.6;filter:blur(20px);pointer-events:none}
 @keyframes logoFloat{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-8px) rotate(.4deg)}60%{transform:translateY(-4px) rotate(-.3deg)}}
 .page-header{padding:60px 24px 28px;text-align:center}
 .page-header-badge{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);background:color-mix(in srgb, var(--accent) 12%, transparent);border:1px solid color-mix(in srgb, var(--accent) 25%, transparent);padding:8px 18px;border-radius:20px;margin-bottom:18px;backdrop-filter:blur(8px)}
@@ -86,8 +95,8 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);colo
 @keyframes iconFloat{0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-7px) rotate(1.5deg)}65%{transform:translateY(-3px) rotate(-1deg)}}
 .icon-glow{position:absolute;inset:15px;border-radius:50%;background:var(--card-color,rgba(255,255,255,0.3));filter:blur(14px);opacity:.35;transition:opacity .22s}
 .card:hover .icon-glow,.card:active .icon-glow{opacity:.7}
-.icon-inner{position:relative;width:90px;height:90px;display:flex;align-items:center;justify-content:center;z-index:5;background:transparent!important}
-.icon-img{width:100%;height:100%;background-size:contain;background-position:center;background-repeat:no-repeat;filter:drop-shadow(0 12px 20px rgba(0,0,0,0.45));pointer-events:none;transition:transform .3s ease;background:transparent!important}
+.icon-inner{position:relative;width:90px;height:90px;display:flex;align-items:center;justify-content:center;z-index:5;background-color:transparent!important}
+.icon-img{width:100%;height:100%;background-size:contain;background-position:center;background-repeat:no-repeat;filter:drop-shadow(0 12px 20px rgba(0,0,0,0.45));pointer-events:none;transition:transform .3s ease;background-color:transparent!important}
 .card:hover .icon-img{transform:scale(1.15) rotate(4deg)}
 .icon-inner::after{display:none}
 .info-bar{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 36px;max-width:520px;margin:0 auto}
@@ -228,7 +237,11 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);colo
 </div>
 
 <div id="main-wrapper">
-  <div class="top-reveal-area" id="top-reveal-area"></div>
+  <div class="top-reveal-area" id="top-reveal-area">
+    <div style="position:relative;display:inline-flex;align-items:center;justify-content:center">
+      <div style="position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.12) 0%,var(--accent-glow-mid) 30%,transparent 65%);animation:logoPulse 2.8s ease-in-out infinite;pointer-events:none"></div>
+    </div>
+  </div>
   <div class="page-header" id="contacts-anchor">
     <div class="page-header-badge"><i class="fas fa-store"></i> Fale Conosco</div>
     <h2 class="page-title">Nossos <span class="accent" id="contacts-title">Contatos</span></h2>
@@ -317,14 +330,53 @@ function buildPage(data) {
     }, 2000);
   }
 
+  // Update Logo Glows (Portal and Reveal)
+  const glows = document.querySelectorAll('.logo-glow-bg, #reveal-glow-bg');
+  if (glows.length > 0) {
+    const hex = accent.replace('#','');
+    const r = parseInt(hex.substring(0,2),16)||209;
+    const g = parseInt(hex.substring(2,4),16)||255;
+    const b = parseInt(hex.substring(4,6),16)||77;
+    document.documentElement.style.setProperty('--accent-glow-mid',`rgba(${r},${g},${b},0.38)`);
+    document.documentElement.style.setProperty('--accent-glow-out',`rgba(${r},${g},${b},0.10)`);
+    glows.forEach(g => {
+      g.style.filter = `drop-shadow(0 0 50px rgba(${r},${g},${b},0.55))`;
+    });
+  }
+
   // Header mini logo / Reveal logo / Footer Setup
   const headerLogo = document.getElementById('header-logo-container');
+  const topReveal = document.getElementById('top-reveal-area');
   if (data.logo) {
-    headerLogo.innerHTML = `<img src="${data.logo}" alt="${data.name}" class="header-logo-mini">`;
-    document.getElementById('top-reveal-area').innerHTML = `<img src="${data.logo}" alt="${data.name}" class="reveal-logo">`;
+    if(headerLogo) headerLogo.innerHTML = `<img src="${data.logo}" alt="${data.name}" class="header-logo-mini">`;
+    if(topReveal) {
+      topReveal.innerHTML = `
+        <div style="position:relative;display:inline-flex;align-items:center;justify-content:center">
+          <div style="position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.12) 0%,var(--accent-glow-mid) 30%,transparent 65%);animation:logoPulse 2.8s ease-in-out infinite;pointer-events:none"></div>
+          <img src="${data.logo}" alt="${data.name}" class="reveal-logo" style="position:relative;z-index:1">
+        </div>`;
+    }
     document.getElementById('footer-logo-wrap').innerHTML = `<img src="${data.logo}" alt="${data.name}" class="footer-logo">`;
     document.getElementById('logo-left-half').style.backgroundImage = `url('${data.logo}')`;
     document.getElementById('logo-right-half').style.backgroundImage = `url('${data.logo}')`;
+    
+    // Smart Favicon (Prevent Squashing)
+    generateSquareFavicon(data.logo);
+  } else {
+    // Fallback: Text Logo
+    if(headerLogo) headerLogo.innerHTML = `<span class="header-logo-mini" style="font-weight:900; color:var(--accent)">${data.name.charAt(0)}</span>`;
+    if(topReveal) {
+      topReveal.innerHTML = `
+        <div style="position:relative;display:inline-flex;align-items:center;justify-content:center">
+          <div style="position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.12) 0%,var(--accent-glow-mid) 30%,transparent 65%);animation:logoPulse 2.8s ease-in-out infinite;pointer-events:none"></div>
+          <h1 class="reveal-logo-text" style="color:white; z-index:10; margin:0">${data.name}</h1>
+        </div>`;
+    }
+    document.getElementById('footer-logo-wrap').innerHTML = `<span style="font-weight:900; color:var(--accent)">${data.name}</span>`;
+    document.getElementById('logo-container').innerHTML = `
+      <div id="logo-left-half" style="display:flex; align-items:center; justify-content:center; font-size:25vw; font-weight:900; color:white; clip-path:inset(0 50% 0 0)">${data.name.charAt(0)}</div>
+      <div id="logo-right-half" style="display:flex; align-items:center; justify-content:center; font-size:25vw; font-weight:900; color:white; clip-path:inset(0 0 0 50%)">${data.name.charAt(0)}</div>
+    `;
   }
 
   if ((data.links||[]).length >= 8) document.getElementById('search-box').style.display = 'block';
@@ -340,6 +392,7 @@ function buildPage(data) {
 
 function renderLinks(links, slug) {
   const grid = document.getElementById('cards-grid');
+  gsap.set(grid, {opacity: 0});
   const now = new Date().getTime();
   const activeLinks = (links||[]).filter(link => !link.expires_at || new Date(link.expires_at).getTime() > now);
   grid.innerHTML = activeLinks.map((link, i) => {
@@ -382,11 +435,17 @@ function setupClickTracking(slug) {
 function initAnimations() {
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
   
+  // Pre-optimize for GPU
+  gsap.set(['#logo-left-half','#logo-right-half','#logo-container'], {
+    willChange: 'transform, filter, opacity'
+  });
+
   // Floating animation for logo
   const floatAnim = gsap.to('#logo-container', {y:-15, duration:2.5, repeat:-1, yoyo:true, ease:'sine.inOut'});
 
   const tl = gsap.timeline({paused:true, onComplete: () => {
     document.body.style.overflow = 'auto';
+    gsap.to('#cards-grid', {opacity:1, duration:.4, ease:'power2.out'});
   }});
 
   tl.to('.scroll-hint', {opacity:0,y:20,duration:.3})
@@ -431,6 +490,31 @@ function initAnimations() {
       opacity:0,y:28,duration:.45,delay:(i%2)*.06,ease:'power2.out'
     });
   });
+}
+
+function generateSquareFavicon(url) {
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = function() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    
+    const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+    const x = (canvas.width / 2) - (img.width / 2) * scale;
+    const y = (canvas.height / 2) - (img.height / 2) * scale;
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+    
+    const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = canvas.toDataURL("image/png");
+    document.getElementsByTagName('head')[0].appendChild(link);
+  };
+  img.src = url;
 }
 
 loadClient();
