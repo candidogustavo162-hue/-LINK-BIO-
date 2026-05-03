@@ -3,243 +3,824 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supermercado Marinho</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Admin Panel | Link Bio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #d1ff4d;
+            --primary-dark: #b8e63d;
+            --bg: #020b1c;
+            --surface: #0a162d;
+            --surface-light: #162545;
+            --text: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --border: rgba(255, 255, 255, 0.1);
+            --radius: 12px;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Login Screen */
+        #login-screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, var(--surface) 0%, var(--bg) 100%);
+            z-index: 1000;
+        }
+
+        .login-card {
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .login-card h1 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+        .login-card p { color: var(--text-muted); margin-bottom: 30px; font-size: 14px; }
+
+        /* App Layout */
+        #app { display: none; min-height: 100vh; }
+        .sidebar {
+            width: 260px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            height: 100vh;
+            position: fixed;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content { margin-left: 260px; padding: 40px; width: calc(100% - 260px); }
+
+        .logo { font-size: 20px; font-weight: 800; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+        .logo i { color: var(--primary); }
+
+        .nav-item {
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            color: var(--text-muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--surface-light);
+            color: var(--text);
+        }
+
+        .nav-item.active i { color: var(--primary); }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary { background: var(--primary); color: #000; }
+        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-outline:hover { background: var(--surface-light); }
+        .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.2); }
+        .btn-danger:hover { background: var(--accent-red); color: white; }
+
+        /* Header */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .page-header h2 { font-size: 28px; font-weight: 800; }
+
+        /* Table/List */
+        .client-list { display: grid; gap: 16px; }
+        .client-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+        .client-card:hover { border-color: rgba(255,255,255,0.2); background: var(--surface-light); }
+
+        .client-info { display: flex; align-items: center; gap: 16px; }
+        .client-logo { width: 48px; height: 48px; border-radius: 12px; background: #fff; object-fit: contain; padding: 4px; }
+        .client-details h3 { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+        .client-details p { font-size: 13px; color: var(--text-muted); }
+
+        .client-status {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .status-active { background: rgba(209, 255, 77, 0.1); color: var(--primary); }
+        .status-inactive { background: rgba(255, 255, 255, 0.05); color: var(--text-muted); }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+        .form-control {
+            width: 100%;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: inherit;
+            outline: none;
+        }
+        .form-control:focus { border-color: var(--primary); }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        .modal-content {
+            background: var(--surface);
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            padding: 40px;
+        }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .modal-header h3 { font-size: 24px; font-weight: 800; }
+        .close-modal { cursor: pointer; font-size: 20px; color: var(--text-muted); }
+
+        /* Link Management */
+        .links-editor { margin-top: 30px; border-top: 1px solid var(--border); pt: 30px; }
+        .links-list { display: grid; gap: 10px; margin-bottom: 20px; }
+        .link-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 1fr 44px;
+            gap: 10px;
+            align-items: center;
+            background: var(--surface-light);
+            padding: 10px;
+            border-radius: var(--radius);
+        }
+
+        /* Color Inputs */
+        .color-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .color-picker-wrap { display: flex; align-items: center; gap: 10px; }
+        .color-picker-wrap input[type="color"] {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 8px;
+            background: none;
+            cursor: pointer;
+        }
+
+        /* Loading */
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 3000;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    </style>
 </head>
 <body>
 
-    <div id="bg-layer"></div>
-    <div class="vignette"></div>
-
-    <!-- Orbs de luz ambiente -->
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
-    <div class="ambient-orb orb-3"></div>
-
-    <header id="main-header">
-        <img src="logo.png" alt="Marinho" class="header-logo">
-        <a href="#" class="header-cta">Fale Conosco</a>
-    </header>
-
-    <!-- ── HERO: animação portal ── -->
-    <section id="hero">
-        <div class="floating-elements" id="particles"></div>
-
-        <!-- Glow atrás da logo -->
-        <div class="logo-glow-bg"></div>
-
-        <div class="logo-container">
-            <div id="logo-left-half"  class="logo-half"></div>
-            <div id="logo-right-half" class="logo-half"></div>
-            <div class="glow-line" id="glow"></div>
-        </div>
-
-        <!-- Flash de luz do portal -->
-        <div id="portal-flash"></div>
-
-        <div class="scroll-hint">
-            Role para explorar
-            <div class="chevron"><i class="fas fa-chevron-down"></i></div>
-        </div>
-    </section>
-
-    <!-- ── CONTEÚDO PRINCIPAL ── -->
-    <div id="main-wrapper">
-
-        <!-- Logo flutuante no topo do conteúdo -->
-        <div class="top-reveal-area">
-            <img src="logo.png" alt="Marinho" class="reveal-logo">
-        </div>
-
-        <!-- Cabeçalho da página -->
-        <div class="page-header" id="contacts-anchor">
-            <div class="page-header-badge">
-                <i class="fas fa-store"></i> Fale Conosco
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-card">
+            <h1>Link Bio Admin</h1>
+            <p>Faça login para gerenciar seus clientes.</p>
+            <div class="form-group">
+                <input type="email" id="login-email" class="form-control" placeholder="E-mail">
             </div>
-            <h2 class="page-title">Nossos <span class="accent">Contatos</span></h2>
-            <p class="page-sub">Escolha como deseja falar com a gente ou encontre tudo o que precisa.</p>
+            <div class="form-group">
+                <input type="password" id="login-pass" class="form-control" placeholder="Senha">
+            </div>
+            <button id="btn-login" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                Entrar <div class="loader" id="login-loader"></div>
+            </button>
         </div>
+    </div>
 
-        <!-- Grid de cards (1 coluna mobile / 2 colunas desktop) -->
-        <div class="cards-grid">
-
-            <!-- WhatsApp -->
-            <a href="#" class="card card-whatsapp">
-                <div class="card-accent-line"></div>
-                <div class="card-body">
-                    <span class="card-cat">ATENDIMENTO</span>
-                    <h3 class="card-name">WhatsApp</h3>
-                    <p class="card-desc">Fale com nossa equipe e receba as melhores ofertas direto no seu WhatsApp.</p>
-                    <span class="card-cta">Falar no WhatsApp <i class="fas fa-arrow-right"></i></span>
-                </div>
-                <div class="card-icon-area">
-                    <div class="icon-placeholder">
-                        <div class="icon-glow"></div>
-                        <img class="icon-3d" src="icons/WHA.png" alt="WhatsApp">
-                    </div>
-                </div>
-            </a>
-
-            <!-- Grupo de Ofertas -->
-            <a href="#" class="card card-grupo">
-                    <div class="card-accent-line"></div>
-                <div class="card-body">
-                    <span class="card-cat">PROMOÇÕES</span>
-                    <h3 class="card-name">Grupo de Ofertas</h3>
-                    <p class="card-desc">Entre no grupo e receba promoções e ofertas exclusivas em primeira mão.</p>
-                    <span class="card-cta">Entrar no Grupo <i class="fas fa-arrow-right"></i></span>
-                </div>
-                <div class="card-icon-area">
-                    <div class="icon-placeholder">
-                        <div class="icon-glow"></div>
-                        <img class="icon-3d" src="icons/GRUPO.png" alt="Grupo de Ofertas">
-                    </div>
-                </div>
-            </a>
-
-            <!-- Localização -->
-            <a href="#" class="card card-mapa">
-                    <div class="card-accent-line"></div>
-                <div class="card-body">
-                    <span class="card-cat">LOCALIZAÇÃO</span>
-                    <h3 class="card-name">Onde estamos</h3>
-                    <p class="card-desc">Veja no mapa onde estamos e encontre o caminho mais fácil até a loja.</p>
-                    <span class="card-cta">Ver no Mapa <i class="fas fa-arrow-right"></i></span>
-                </div>
-                <div class="card-icon-area">
-                    <div class="icon-placeholder">
-                        <div class="icon-glow"></div>
-                        <img class="icon-3d" src="icons/LOCAL.png" alt="Localização">
-                    </div>
-                </div>
-            </a>
-
-            <!-- Site -->
-            <a href="#" class="card card-site">
-                    <div class="card-accent-line"></div>
-                <div class="card-body">
-                    <span class="card-cat">SITE OFICIAL</span>
-                    <h3 class="card-name">Acessar nosso site</h3>
-                    <p class="card-desc">Visite o site oficial e confira o catálogo completo de produtos e novidades.</p>
-                    <span class="card-cta">Visitar o Site <i class="fas fa-arrow-right"></i></span>
-                </div>
-                <div class="card-icon-area">
-                    <div class="icon-placeholder">
-                        <div class="icon-glow"></div>
-                        <img class="icon-3d" src="icons/SITE.png" alt="Site">
-                    </div>
-                </div>
-            </a>
-
-            <!-- App -->
-            <a href="#" class="card card-app">
-                    <div class="card-accent-line"></div>
-                <div class="card-body">
-                    <span class="card-cat">APLICATIVO</span>
-                    <h3 class="card-name">Baixe nosso app</h3>
-                    <p class="card-desc">Ofertas exclusivas e muito mais na palma da sua mão. iOS e Android.</p>
-                    <span class="card-cta">Baixar Aplicativo <i class="fas fa-arrow-right"></i></span>
-                </div>
-                <div class="card-icon-area">
-                    <div class="icon-placeholder">
-                        <div class="icon-glow"></div>
-                        <img class="icon-3d" src="icons/APP.png" alt="Aplicativo">
-                    </div>
-                </div>
-            </a>
-
-            <!-- Instagram -->
-            <a href="#" class="card card-instagram">
-                    <div class="card-accent-line"></div>
-                <div class="card-body">
-                    <span class="card-cat">REDES SOCIAIS</span>
-                    <h3 class="card-name">Siga no Instagram</h3>
-                    <p class="card-desc">Acompanhe promoções, novidades e os bastidores do Supermercado Marinho.</p>
-                    <span class="card-cta">Seguir Agora <i class="fas fa-arrow-right"></i></span>
-                </div>
-                <div class="card-icon-area">
-                    <div class="icon-placeholder">
-                        <div class="icon-glow"></div>
-                        <img class="icon-3d" src="icons/INSTAGRAM.png" alt="Instagram">
-                    </div>
-                </div>
-            </a>
-
-            <!-- Ligar -->
-            <a href="#" class="card card-phone">
-                    <div class="card-accent-line"></div>
-                <div class="card-body">
-                    <span class="card-cat">TELEFONE</span>
-                    <h3 class="card-name">Ligar agora</h3>
-                    <p class="card-desc">Fale diretamente com nossa equipe por telefone para informações rápidas.</p>
-                    <span class="card-cta">Ligar Agora <i class="fas fa-arrow-right"></i></span>
-                </div>
-                <div class="card-icon-area">
-                    <div class="icon-placeholder">
-                        <div class="icon-glow"></div>
-                        <img class="icon-3d" src="icons/TELEFO.png" alt="Telefone">
-                    </div>
-                </div>
-            </a>
-
-            <!-- Falar com a loja -->
-            <a href="#" class="card card-loja">
-                    <div class="card-accent-line"></div>
-                <div class="card-body">
-                    <span class="card-cat">ATENDIMENTO</span>
-                    <h3 class="card-name">Falar com a loja</h3>
-                    <p class="card-desc">Dúvidas, sugestões ou informações? Nossa equipe está pronta para atender.</p>
-                    <span class="card-cta">Fale com a Loja <i class="fas fa-arrow-right"></i></span>
-                </div>
-                <div class="card-icon-area">
-                    <div class="icon-placeholder">
-                        <div class="icon-glow"></div>
-                        <img class="icon-3d" src="icons/MENSA.png" alt="Falar com a loja">
-                    </div>
-                </div>
-            </a>
-
-        </div><!-- /cards-grid -->
-
-        <!-- Barra de diferenciais -->
-        <div class="info-bar">
-            <div class="info-item">
-                <i class="fas fa-shield-alt"></i>
-                <strong>Segurança</strong>
-                <span>Seus dados sempre protegidos</span>
+    <!-- App Shell -->
+    <div id="app">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-bolt"></i> LinkBio Admin
             </div>
-            <div class="info-item">
-                <i class="fas fa-tags"></i>
-                <strong>Preço baixo</strong>
-                <span>As melhores ofertas da região</span>
+            <nav>
+                <div class="nav-item active">
+                    <i class="fas fa-users"></i> Clientes
+                </div>
+                <!-- Add more nav items if needed -->
+            </nav>
+            <div style="margin-top: auto;">
+                <div class="nav-item" id="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </div>
             </div>
-            <div class="info-item">
-                <i class="fas fa-box-open"></i>
-                <strong>Variedade</strong>
-                <span>Tudo em um só lugar</span>
+        </aside>
+
+        <main class="main-content">
+            <header class="page-header">
+                <div>
+                    <h2>Clientes</h2>
+                    <p style="color: var(--text-muted);">Gerencie as bios de seus clientes</p>
+                </div>
+                <button class="btn btn-primary" id="btn-new-client">
+                    <i class="fas fa-plus"></i> Novo Cliente
+                </button>
+            </header>
+
+            <div class="client-list" id="client-list">
+                <!-- Clients will be injected here -->
             </div>
-            <div class="info-item">
-                <i class="fas fa-clock"></i>
-                <strong>Horário</strong>
-                <span>Seg–Sáb 7h–22h · Dom 7h–20h</span>
+        </main>
+    </div>
+
+    <!-- Client Modal -->
+    <div class="modal" id="client-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Novo Cliente</h3>
+                <i class="fas fa-times close-modal" id="close-modal"></i>
             </div>
+
+            <form id="client-form">
+                <input type="hidden" id="edit-slug">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Nome do Cliente</label>
+                        <input type="text" id="client-name" class="form-control" required placeholder="Ex: Supermercado Marinho">
+                    </div>
+                    <div class="form-group">
+                        <label>Slug (URL)</label>
+                        <input type="text" id="client-slug" class="form-control" required placeholder="ex: supermercado-marinho">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Logo do Cliente</label>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <div id="logo-preview" style="width: 64px; height: 64px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-light); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                            <i class="fas fa-image" style="color: var(--text-muted);"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <input type="file" id="client-logo-file" class="form-control" accept="image/*" style="margin-bottom: 8px;">
+                            <input type="url" id="client-logo" class="form-control" placeholder="Ou cole a URL aqui">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="client-desc" class="form-control" rows="2" placeholder="Fale com nossa equipe..."></textarea>
+                </div>
+
+                <div class="color-inputs">
+                    <div class="form-group">
+                        <label>Cor de Destaque</label>
+                        <div class="color-picker-wrap">
+                            <input type="color" id="client-accent" value="#d1ff4d">
+                            <input type="text" id="client-accent-text" class="form-control" value="#d1ff4d">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Cor de Fundo</label>
+                        <div class="color-picker-wrap">
+                            <input type="color" id="client-bg" value="#020b1c">
+                            <input type="text" id="client-bg-text" class="form-control" value="#020b1c">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="client-status" class="form-control">
+                        <option value="active">Ativo</option>
+                        <option value="inactive">Inativo</option>
+                    </select>
+                </div>
+
+                <div class="links-editor">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; margin-top: 20px;">
+                        <h4 style="font-weight: 700;">Links</h4>
+                        <button type="button" class="btn btn-outline" id="btn-add-link" style="padding: 6px 12px; font-size: 12px;">
+                            <i class="fas fa-plus"></i> Adicionar Link
+                        </button>
+                    </div>
+                    <div class="links-list" id="links-list">
+                        <!-- Links will be injected here -->
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 30px;">
+                    <button type="button" class="btn btn-outline" id="btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-client">
+                        Salvar Cliente <div class="loader" id="save-loader"></div>
+                    </button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <footer class="site-footer">
-            <img src="logo.png" alt="Marinho" class="footer-logo">
-            <p class="footer-tagline">Onde sua compra <span class="accent">rende mais!</span></p>
-            <i class="fas fa-heart footer-heart"></i>
-        </footer>
+    <div id="toast"></div>
 
-    </div><!-- /main-wrapper -->
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
-    <script src="main.js"></script>
+        const supabaseUrl = 'https://ejkoqkggtwkloukpekpv.supabase.co';
+        const supabaseKey = 'sb_publishable_PIMTKiW8Y2ZX7zkp8_kxqQ_BguIfEL3';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        const modal = document.getElementById('client-modal');
+        const closeModal = () => {
+            if (modal) modal.style.display = 'none';
+            document.getElementById('client-form').reset();
+            document.getElementById('links-list').innerHTML = '';
+        };
+
+        // Global Error Tracking
+        window.onerror = function(msg, url, line, col, error) {
+            alert(`ERRO GLOBAL: ${msg}\nLinha: ${line}\nErro: ${error}`);
+            console.error("Global Error:", {msg, url, line, col, error});
+            return false;
+        };
+
+        const LINK_TYPES = [
+            { id: 'whatsapp', label: 'WhatsApp' },
+            { id: 'instagram', label: 'Instagram' },
+            { id: 'phone', label: 'Telefone' },
+            { id: 'maps', label: 'Localização' },
+            { id: 'website', label: 'Site' },
+            { id: 'group', label: 'Grupo' },
+            { id: 'app', label: 'App' },
+            { id: 'message', label: 'Mensagem' },
+            { id: 'email', label: 'E-mail' }
+        ];
+
+        // Global functions exposure (using function declarations for hoisting)
+        window.loadClients = loadClients;
+        window.renderClients = renderClients;
+        window.addLinkRow = addLinkRow;
+        window.saveClient = saveClient;
+        window.editClient = editClient;
+        window.deleteClient = deleteClient;
+        window.closeModal = closeModal;
+
+        // Auth state
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'flex';
+                loadClients();
+            } else {
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('app').style.display = 'none';
+            }
+        });
+
+        // Login
+        document.getElementById('btn-login').addEventListener('click', async () => {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            const loader = document.getElementById('login-loader');
+            
+            if (!email || !pass) return showToast("Preencha todos os campos");
+
+            loader.style.display = 'inline-block';
+            try {
+                console.log("Tentando login com Supabase:", email);
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: pass,
+                });
+                
+                if (error) throw error;
+                console.log("Login realizado com sucesso!");
+            } catch (e) {
+                console.error("Login error:", e);
+                alert("Erro ao entrar: " + (e.message || "Credenciais inválidas"));
+                showToast("Erro ao entrar: " + e.message);
+            } finally {
+                loader.style.display = 'none';
+            }
+        });
+
+        // Global Event Delegation (for static elements)
+        document.addEventListener('click', (e) => {
+            const btnLogout = e.target.closest('#btn-logout');
+            const btnNewClient = e.target.closest('#btn-new-client');
+            const btnCancel = e.target.closest('#btn-cancel');
+            const btnCloseModal = e.target.closest('#close-modal');
+            const btnAddLink = e.target.closest('#btn-add-link');
+
+            if (btnLogout) {
+                supabase.auth.signOut();
+            } else if (btnNewClient) {
+                document.getElementById('client-form').reset();
+                document.getElementById('edit-slug').value = '';
+                document.getElementById('client-slug').value = '';
+                document.getElementById('client-slug').disabled = false;
+                document.getElementById('links-list').innerHTML = '';
+                document.getElementById('modal-title').innerText = 'Novo Cliente';
+                document.getElementById('logo-preview').innerHTML = `<i class="fas fa-image" style="color: var(--text-muted);"></i>`;
+                modal.style.display = 'flex';
+            } else if (btnCancel || btnCloseModal) {
+                closeModal();
+            } else if (btnAddLink) {
+                addLinkRow();
+            }
+        });
+
+        // Real-time Clients Listener
+        let channel = null;
+        async function loadClients() {
+            console.log("Iniciando carregamento de clientes...");
+            
+            const { data: clients, error } = await supabase
+                .from('clients')
+                .select('*')
+                .order('updated_at', { ascending: false });
+
+            if (error) {
+                console.error("Erro ao carregar clientes:", error);
+                showToast("Erro ao carregar dados.");
+                return;
+            }
+
+            renderClients(clients);
+
+            // Setup Realtime
+            if (channel) supabase.removeChannel(channel);
+            
+            channel = supabase.channel('clients-changes')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'clients' }, () => {
+                    loadClients();
+                })
+                .subscribe();
+        }
+
+        function renderClients(clients) {
+            const list = document.getElementById('client-list');
+            if (!list) return;
+            list.innerHTML = '';
+            
+            if (!clients || clients.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:20px;">Nenhum cliente cadastrado.</p>';
+                return;
+            }
+
+            clients.forEach(client => {
+                const card = document.createElement('div');
+                card.className = 'client-card';
+                card.innerHTML = `
+                    <div class="client-info">
+                        ${client.logo ? `<img src="${client.logo}" class="client-logo">` : `<div class="client-logo" style="display:flex;align-items:center;justify-content:center;background:var(--surface-light);color:var(--primary);font-weight:800">${(client.name || 'C')[0]}</div>`}
+                        <div class="client-details">
+                            <h3>${client.name || 'Sem nome'}</h3>
+                            <a href="linkbio.html#${client.slug}" target="_blank" style="font-size: 12px; color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                                <i class="fas fa-external-link-alt"></i> linkbio.html#${client.slug}
+                            </a>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <span class="client-status status-${client.status || 'active'}">${client.status || 'active'}</span>
+                        <button class="btn btn-outline btn-edit" data-slug="${client.slug}">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button class="btn btn-danger btn-delete" data-slug="${client.slug}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+                // Adiciona listeners diretamente aos botões para máxima confiabilidade
+                card.querySelector('.btn-edit').onclick = (e) => {
+                    e.stopPropagation();
+                    console.log("Edit clicado:", client.slug);
+                    window.editClient(client.slug);
+                };
+                card.querySelector('.btn-delete').onclick = (e) => {
+                    e.stopPropagation();
+                    console.log("Delete clicado:", client.slug);
+                    window.deleteClient(client.slug);
+                };
+
+                list.appendChild(card);
+            });
+        }
+        window.renderClients = renderClients;
+
+        function addLinkRow(link = { type: 'whatsapp', label: '', url: '' }) {
+            const list = document.getElementById('links-list');
+            const row = document.createElement('div');
+            row.className = 'link-row';
+            row.innerHTML = `
+                <select class="form-control link-type">
+                    ${LINK_TYPES.map(t => `<option value="${t.id}" ${link.type === t.id ? 'selected' : ''}>${t.label}</option>`).join('')}
+                </select>
+                <input type="text" class="form-control link-label" placeholder="Rótulo" value="${link.label}">
+                <input type="text" class="form-control link-url" placeholder="URL" value="${link.url}">
+                <button type="button" class="btn btn-danger btn-remove-link" style="padding:0; width:44px; height:44px; justify-content:center;">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            row.querySelector('.btn-remove-link').onclick = () => row.remove();
+            list.appendChild(row);
+        }
+
+        // Logo Preview & Clear
+        document.getElementById('client-logo-file').onchange = e => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    document.getElementById('logo-preview').innerHTML = `<img src="${ev.target.result}" style="width:100%; height:100%; object-fit:contain;">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        document.getElementById('client-logo').oninput = e => {
+            if (e.target.value) {
+                document.getElementById('logo-preview').innerHTML = `<img src="${e.target.value}" style="width:100%; height:100%; object-fit:contain;">`;
+            }
+        };
+
+        // Color Sync
+        document.getElementById('client-accent').oninput = e => document.getElementById('client-accent-text').value = e.target.value;
+        document.getElementById('client-bg').oninput = e => document.getElementById('client-bg-text').value = e.target.value;
+
+        // Save Client Logic
+        async function saveClient() {
+            const form = document.getElementById('client-form');
+            
+            if (!form.reportValidity()) return;
+
+            const loader = document.getElementById('save-loader');
+            const btnSave = document.getElementById('btn-save-client');
+            
+            loader.style.display = 'inline-block';
+            btnSave.disabled = true;
+
+            try {
+                let slug = document.getElementById('client-slug').value.trim().toLowerCase();
+                slug = slug.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                
+                const name = document.getElementById('client-name').value.trim();
+                const fileInput = document.getElementById('client-logo-file');
+                let logo = document.getElementById('client-logo').value.trim();
+                
+                // Upload image if file is selected
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${slug}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+                    const filePath = `logos/${fileName}`;
+
+                    console.log("Fazendo upload da logo...", filePath);
+                    
+                    const { data: uploadData, error: uploadError } = await supabase.storage
+                        .from('logos')
+                        .upload(filePath, file, { upsert: true });
+
+                    if (uploadError) throw new Error("Erro no upload da imagem: " + uploadError.message);
+
+                    const { data: publicUrlData } = supabase.storage
+                        .from('logos')
+                        .getPublicUrl(filePath);
+                    
+                    logo = publicUrlData.publicUrl;
+                }
+
+                const description = document.getElementById('client-desc').value.trim();
+                const accent_color = document.getElementById('client-accent-text').value.trim();
+                const bg_color = document.getElementById('client-bg-text').value.trim();
+                const status = document.getElementById('client-status').value;
+
+                if (!slug) throw new Error("Slug inválido. Use apenas letras e números.");
+                if (!name) throw new Error("Nome do cliente é obrigatório.");
+
+                console.log("Enviando dados para o Supabase...", slug);
+
+                const links = [];
+                document.querySelectorAll('.link-row').forEach(row => {
+                    const type = row.querySelector('.link-type').value;
+                    const label = row.querySelector('.link-label').value.trim();
+                    const url = row.querySelector('.link-url').value.trim();
+                    if (label || url) links.push({ type, label, url });
+                });
+
+                const clientData = {
+                    slug, name, logo, description, accent_color, bg_color, status, links,
+                    updated_at: new Date().toISOString()
+                };
+
+                const { error } = await supabase
+                    .from('clients')
+                    .upsert(clientData);
+
+                if (error) throw error;
+
+                console.log("Gravado com sucesso no Supabase!");
+                showToast("Cliente salvo com sucesso!");
+                
+                modal.style.display = 'none';
+                form.reset();
+                document.getElementById('links-list').innerHTML = '';
+                loadClients();
+                
+            } catch (err) {
+                console.error("Erro fatal ao salvar:", err);
+                alert("ERRO AO SALVAR: " + err.message);
+            } finally {
+                loader.style.display = 'none';
+                btnSave.disabled = false;
+            }
+        }
+
+        // Atribui o evento ao botão diretamente
+        document.getElementById('btn-save-client').onclick = (e) => {
+            e.preventDefault();
+            saveClient();
+        };
+
+        // Mantém o listener do formulário como backup ou remove se preferir
+        document.getElementById('client-form').onsubmit = (e) => {
+            e.preventDefault();
+            saveClient();
+        };
+
+        // Edit Client
+        async function editClient(slug) {
+            console.log("Abrindo edição para:", slug);
+            
+            const btn = document.querySelector(`.btn-edit[data-slug="${slug}"]`) || 
+                        Array.from(document.querySelectorAll('.btn-edit')).find(b => b.onclick && b.onclick.toString().includes(slug));
+
+            const originalContent = btn ? btn.innerHTML : '<i class="fas fa-edit"></i>';
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                btn.disabled = true;
+            }
+
+            try {
+                const { data, error } = await supabase
+                    .from('clients')
+                    .select('*')
+                    .eq('slug', slug)
+                    .single();
+
+                if (error) throw error;
+                if (!data) return showToast("Cliente não encontrado");
+
+                document.getElementById('edit-slug').value = slug;
+                document.getElementById('client-slug').value = slug;
+                document.getElementById('client-slug').disabled = true;
+                document.getElementById('client-name').value = data.name || '';
+                document.getElementById('client-logo').value = data.logo || '';
+                if (data.logo) {
+                    document.getElementById('logo-preview').innerHTML = `<img src="${data.logo}" style="width:100%; height:100%; object-fit:contain;">`;
+                } else {
+                    document.getElementById('logo-preview').innerHTML = `<i class="fas fa-image" style="color: var(--text-muted);"></i>`;
+                }
+                document.getElementById('client-logo-file').value = '';
+                document.getElementById('client-desc').value = data.description || '';
+                document.getElementById('client-accent-text').value = data.accent_color || '#d1ff4d';
+                document.getElementById('client-accent').value = data.accent_color || '#d1ff4d';
+                document.getElementById('client-bg-text').value = data.bg_color || '#020b1c';
+                document.getElementById('client-bg').value = data.bg_color || '#020b1c';
+                document.getElementById('client-status').value = data.status || 'active';
+
+                const list = document.getElementById('links-list');
+                list.innerHTML = '';
+                (data.links || []).forEach(l => addLinkRow(l));
+
+                document.getElementById('modal-title').innerText = 'Editar Cliente';
+                modal.style.display = 'flex';
+            } catch (e) {
+                console.error("Error loading client for edit:", e);
+                alert("Erro ao carregar dados para edição.");
+            } finally {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
+        }
+
+        // Delete Client
+        async function deleteClient(slug) {
+            console.log("Tentando deletar:", slug);
+            if (!confirm(`Tem certeza que deseja excluir o cliente ${slug}?`)) return;
+            
+            const btn = document.querySelector(`.btn-delete[data-slug="${slug}"]`) || 
+                        Array.from(document.querySelectorAll('.btn-delete')).find(b => b.closest('.client-card').innerHTML.includes(slug));
+
+            const originalContent = btn ? btn.innerHTML : '<i class="fas fa-trash"></i>';
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                btn.disabled = true;
+            }
+
+            console.log("Deleting client:", slug);
+            try {
+                const { error } = await supabase
+                    .from('clients')
+                    .delete()
+                    .eq('slug', slug);
+
+                if (error) throw error;
+
+                showToast("Cliente excluído.");
+                loadClients();
+            } catch (e) {
+                console.error("Error deleting client:", e);
+                alert("Erro ao excluir: " + (e.message || "Verifique suas permissões no Supabase."));
+                showToast("Erro ao excluir.");
+            } finally {
+                if (btn) {
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        function showToast(msg) {
+            console.log("Toast:", msg);
+            const t = document.getElementById('toast');
+            if (!t) return;
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => {
+                t.style.display = 'none';
+            }, 3000);
+        }
+
+
+        // Remove redundant assignments at the end
+    </script>
 </body>
 </html>
