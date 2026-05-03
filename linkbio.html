@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Link Bio | Sua Identidade Digital</title>
+<meta name="description" content="Conecte-se conosco através de todos os nossos canais oficiais.">
+
+<!-- Open Graph / Social Media -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Link Bio Profissional">
+<meta property="og:description" content="Acesse todos os links oficiais em um só lugar.">
+<meta property="og:image" content="https://ejkoqkggtwkloukpekpv.supabase.co/storage/v1/object/public/logos/GRUPO.png">
+
+<link id="manifest-link" rel="manifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#050505;
+  --bg-soft:#0f0f0f;
+  --accent:#d1ff4d;
+  --text:#ffffff;
+  --muted:rgba(255,255,255,0.7);
+  --border:rgba(255,255,255,0.12);
+  --radius:24px;
+}
+body.light-theme {
+  --bg:#f8f9fa;
+  --bg-soft:#ffffff;
+  --accent:#4d8fff; /* Azul suave para modo claro */
+  --text:#1a1a1a;
+  --muted:rgba(0,0,0,0.6);
+  --border:rgba(0,0,0,0.08);
+}
+html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+#bg-layer{position:fixed;inset:0;background:url('bg.png') center/cover no-repeat;opacity:0.08;z-index:-2}
+.ambient-orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:-1;opacity:.28}
+.orb-1{width:55vw;height:55vw;top:-15vw;left:-10vw;background:radial-gradient(circle,rgba(60,120,255,0.18) 0%,transparent 70%)}
+.orb-2{width:45vw;height:45vw;top:30vh;right:-15vw;background:radial-gradient(circle,rgba(30,80,200,0.12) 0%,transparent 70%);opacity:.8}
+.orb-3{width:60vw;height:60vw;bottom:-20vw;left:10vw;background:radial-gradient(circle,rgba(20,60,160,0.10) 0%,transparent 70%);opacity:.8}
+.vignette{position:fixed;inset:0;background:radial-gradient(ellipse 100% 80% at 50% 35%,transparent 15%,var(--bg) 78%);z-index:0;pointer-events:none}
+#hero{display:none}
+.logo-glow-bg{position:absolute;width:88vw;height:88vw;max-width:520px;max-height:520px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.22) 0%,rgba(255,255,255,0.10) 12%,var(--accent-glow-mid) 28%,var(--accent-glow-out) 50%,transparent 72%);z-index:8;pointer-events:none;animation:logoPulse 2.8s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.14)}}
+.floating-elements{position:absolute;inset:0;pointer-events:none;z-index:5}
+.logo-container{position:relative;width:min(360px,78vw);aspect-ratio:320/170;z-index:10;transform-origin:center center;will-change:transform}
+.logo-half{position:absolute;inset:0;background-size:contain;background-repeat:no-repeat;background-position:center;will-change:transform,filter}
+#logo-left-half{clip-path:inset(0 50% 0 0)}
+#logo-right-half{clip-path:inset(0 0 0 50%)}
+.logo-text-hero{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(2rem,8vw,3rem);font-weight:900;letter-spacing:-.03em;will-change:transform,filter}
+#logo-text-left{clip-path:inset(0 50% 0 0)}
+#logo-text-right{clip-path:inset(0 0 0 50%)}
+.glow-line{position:absolute;top:-30%;left:50%;width:3px;height:160%;background:linear-gradient(to bottom,transparent 0%,color-mix(in srgb, var(--accent) 50%, transparent) 20%,#fff 50%,color-mix(in srgb, var(--accent) 50%, transparent) 80%,transparent 100%);box-shadow:0 0 10px 4px var(--accent),0 0 36px 10px color-mix(in srgb, var(--accent) 70%, transparent),0 0 70px 22px color-mix(in srgb, var(--accent) 35%, transparent);opacity:0;transform:translateX(-50%);z-index:11;transform-origin:center center;will-change:transform,opacity}
+#portal-flash{position:absolute;inset:0;background:radial-gradient(ellipse 55% 100% at 50% 50%,#fff 0%,var(--accent) 22%,color-mix(in srgb, var(--accent) 45%, transparent) 52%,transparent 72%);z-index:18;pointer-events:none;opacity:0}
+.scroll-hint{position:absolute;bottom:200px;left:50%;transform:translateX(-50%);text-align:center;display:flex;flex-direction:column;align-items:center;gap:15px;z-index:12}
+.enter-btn{background:var(--accent);color:#000;border:none;padding:14px 28px;border-radius:50px;font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;box-shadow:0 0 20px color-mix(in srgb, var(--accent) 40%, transparent);animation:pulseBtn 2s infinite}
+@keyframes pulseBtn{0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 40%, transparent)}70%{box-shadow:0 0 0 15px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.scroll-hint span{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.30);white-space:nowrap}
+#main-wrapper{position:relative;z-index:30;opacity:1;padding-bottom:20px}
+.reveal-logo{
+  width:min(320px,70vw);
+  height:auto;
+  object-fit:contain;
+  filter:drop-shadow(0 0 40px rgba(255,255,255,0.15)) drop-shadow(0 0 80px var(--accent));
+  animation:logoFloat 4s ease-in-out infinite;
+  position:relative;
+  z-index:10;
+}
+.reveal-logo-text{font-size:clamp(2.5rem,10vw,4rem);font-weight:900;letter-spacing:-.03em;animation:logoFloat 4s ease-in-out infinite;position:relative;z-index:10}
+.top-reveal-area{width:100%;height:60vh;display:flex;justify-content:center;align-items:center;padding-top:40px;position:relative}
+.reveal-glow{position:absolute;width:120vw;height:120vw;max-width:800px;max-height:800px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow-mid) 0%,var(--accent-glow-out) 40%,transparent 70%);z-index:1;opacity:.6;filter:blur(20px);pointer-events:none}
+@keyframes logoFloat{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-8px) rotate(.4deg)}60%{transform:translateY(-4px) rotate(-.3deg)}}
+.page-header{padding:60px 24px 28px;text-align:center}
+.page-header-badge{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);background:color-mix(in srgb, var(--accent) 12%, transparent);border:1px solid color-mix(in srgb, var(--accent) 25%, transparent);padding:8px 18px;border-radius:20px;margin-bottom:18px;backdrop-filter:blur(8px)}
+.page-title{font-size:clamp(2.4rem,10vw,3.4rem);font-weight:900;line-height:1.06;margin-bottom:14px;letter-spacing:-.03em}
+.page-sub{font-size:.95rem;color:var(--muted);max-width:290px;margin:0 auto;line-height:1.72}
+.accent{color:var(--accent)}
+.cards-grid{display:flex;flex-direction:column;gap:14px;padding:0 16px 32px;max-width:520px;margin:0 auto}
+.card{display:flex;flex-direction:row;align-items:stretch;background:color-mix(in srgb, var(--card-color, var(--accent)) 8%, rgba(255,255,255,0.04));border:1px solid rgba(255,255,255,.12);border-radius:var(--radius);text-decoration:none;color:var(--text);position:relative;overflow:hidden;min-height:148px;transition:transform .22s ease,box-shadow .22s ease,background .22s ease;-webkit-tap-highlight-color:transparent;backdrop-filter:blur(16px)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;border-radius:var(--radius) var(--radius) 0 0;background:linear-gradient(to bottom,rgba(255,255,255,.055) 0%,transparent 100%);pointer-events:none;z-index:1}
+.card:active{transform:scale(.985);box-shadow:0 4px 24px rgba(0,0,0,.3)}
+@media(hover:hover){.card:hover{transform:translateY(-5px);background:rgba(255,255,255,.06);box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 0 1.5px var(--card-color,rgba(255,255,255,.12)),0 0 40px -10px var(--card-color,transparent)}.card:hover .card-cta i{transform:translateX(4px)}}
+.card-accent-line{position:absolute;left:0;top:16px;bottom:16px;width:3px;border-radius:2px;background:var(--card-color,rgba(255,255,255,.2));opacity:.7;z-index:3}
+.card-body{flex:1;display:flex;flex-direction:column;padding:22px 16px 22px 22px;position:relative;z-index:4}
+.card-cat{display:inline-flex;align-items:center;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--card-color,var(--accent));background:color-mix(in srgb,var(--card-color,var(--accent)) 12%,transparent);border:1px solid color-mix(in srgb,var(--card-color,var(--accent)) 28%,transparent);padding:3px 9px;border-radius:20px;margin-bottom:10px;width:fit-content}
+.card-name{font-size:1.18rem;font-weight:800;margin-bottom:7px;line-height:1.25;letter-spacing:-.02em}
+.card-desc{font-size:.78rem;color:var(--muted);line-height:1.62;flex-grow:1;margin-bottom:16px}
+.card-cta{display:inline-flex;align-items:center;gap:7px;font-size:.76rem;font-weight:700;color:var(--card-color,var(--accent));background:color-mix(in srgb,var(--card-color,var(--accent)) 13%,transparent);border:1px solid color-mix(in srgb,var(--card-color,var(--accent)) 30%,transparent);padding:9px 16px;border-radius:28px;width:fit-content;letter-spacing:.01em;transition:background .18s;min-height:38px}
+.card-cta i{font-size:11px;transition:transform .2s ease}
+.card-icon-area{width:110px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:12px 14px;position:relative;z-index:4}
+.icon-placeholder{position:relative;width:110px;height:110px;display:flex;align-items:center;justify-content:center;animation:iconFloat 3.5s ease-in-out infinite}
+@keyframes iconFloat{0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-7px) rotate(1.5deg)}65%{transform:translateY(-3px) rotate(-1deg)}}
+.icon-glow{position:absolute;inset:15px;border-radius:50%;background:var(--card-color,rgba(255,255,255,0.3));filter:blur(14px);opacity:.35;transition:opacity .22s}
+.card:hover .icon-glow,.card:active .icon-glow{opacity:.7}
+.icon-inner{position:relative;width:90px;height:90px;display:flex;align-items:center;justify-content:center;z-index:5;background-color:transparent!important}
+.icon-img{width:100%;height:100%;background-size:contain;background-position:center;background-repeat:no-repeat;filter:drop-shadow(0 12px 20px rgba(0,0,0,0.45));pointer-events:none;transition:transform .3s ease;background-color:transparent!important}
+.card:hover .icon-img{transform:scale(1.15) rotate(4deg)}
+.icon-inner::after{display:none}
+.info-bar{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 36px;max-width:520px;margin:0 auto}
+.info-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:18px 14px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;backdrop-filter:blur(12px)}
+.info-item i{font-size:20px;color:var(--accent);margin-bottom:2px}
+.info-item strong{font-size:.85rem;font-weight:700}
+.info-item span{font-size:.72rem;color:var(--muted);line-height:1.45}
+.site-footer{padding:28px 24px 56px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.footer-logo{height:36px;object-fit:contain;opacity:.7}
+.footer-logo-text{font-size:1.2rem;font-weight:900;opacity:.7}
+.footer-tagline{font-size:.85rem;color:var(--muted)}
+.footer-heart{font-size:20px;color:#ff3b30}
+.promo-btn-footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  margin-bottom: 15px;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+}
+.promo-btn-footer:hover {
+  background: var(--accent);
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+@media(min-width:600px){
+  .cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 20px 36px;max-width:720px}
+  .card{flex-direction:column;min-height:unset}
+  .card-body{padding:22px 20px 16px}
+  .card-icon-area{width:100%;padding:0 20px 20px;justify-content:flex-start}
+  .icon-placeholder{width:100px;height:100px}
+  .icon-inner{width:90px;height:90px}
+  .info-bar{grid-template-columns:repeat(4,1fr);max-width:720px;padding:0 20px 40px}
+}
+.search-container{padding:0 16px 20px;max-width:520px;margin:0 auto;position:relative}
+.search-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:15px;padding:14px 18px 14px 44px;color:#fff;font-family:inherit;outline:none;transition:all .2s}
+.search-input:focus{background:rgba(255,255,255,.08);border-color:var(--accent);box-shadow:0 0 20px rgba(0,0,0,0.2)}
+.search-icon{position:absolute;left:32px;top:15px;color:var(--muted);font-size:14px}
+.back-to-top{position:fixed;bottom:20px;right:20px;width:44px;height:44px;background:var(--accent);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;opacity:0;transform:translateY(20px);transition:all .3s;z-index:100}
+.back-to-top.visible{opacity:1;transform:translateY(0)}
+.welcome-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:rgba(255,255,255,0.1);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.15);padding:12px 24px;border-radius:50px;display:flex;align-items:center;gap:12px;z-index:5000;transition:transform .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);white-space:nowrap}
+.welcome-toast.visible{transform:translateX(-50%) translateY(0)}
+.welcome-toast i{color:var(--accent)}
+.loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
+.loading-spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:.9rem;color:var(--muted)}
+.error-screen{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:12px;text-align:center;padding:24px}
+.error-screen i{font-size:48px;color:rgba(255,77,109,.5);margin-bottom:8px}
+.error-screen h2{font-size:1.4rem;font-weight:800}
+.error-screen p{color:var(--muted);font-size:.9rem;margin-bottom:20px}
+.error-screen .btn-retry{background:var(--accent);color:#000;padding:12px 24px;border-radius:30px;text-decoration:none;font-weight:700;font-size:14px;transition:transform .2s}
+.error-screen .btn-retry:active{transform:scale(.95)}
+
+/* Fixed Header */
+.sticky-header{position:fixed;top:0;left:0;right:0;height:70px;background:rgba(2,11,28,0.4);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:1000;transform:translateY(-100%);transition:transform .5s cubic-bezier(0.4,0,0.2,1);pointer-events:none}
+.sticky-header.visible{transform:translateY(0);pointer-events:auto}
+.header-logo-mini{height:32px;width:auto;object-fit:contain}
+.header-cta-btn{background:var(--accent);color:#000;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:700;text-decoration:none;box-shadow:0 4px 15px color-mix(in srgb, var(--accent) 30%, transparent)}
+
+/* Skeleton Loading */
+.skeleton-screen{position:fixed;inset:0;background:var(--bg);z-index:9998;padding:80px 20px;display:flex;flex-direction:column;align-items:center;gap:20px;overflow:hidden}
+.sk-logo{width:120px;height:120px;background:rgba(255,255,255,0.05);border-radius:50%;margin-bottom:20px}
+.sk-title{width:200px;height:32px;background:rgba(255,255,255,0.05);border-radius:8px}
+.sk-card{width:100%;max-width:520px;height:140px;background:rgba(255,255,255,0.03);border-radius:24px;border:1px solid rgba(255,255,255,0.05)}
+.shimmer{background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent);background-size:200% 100%;animation:shimmer 1.5s infinite}
+@keyframes shimmer{0%{background-position:150% 0}100%{background-position:-50% 0}}
+</style>
+</head>
+<body>
+
+<header class="sticky-header" id="sticky-header">
+  <div id="header-logo-container"></div>
+  <a href="https://wa.me/?text=Confira%20este%20link!" target="_blank" class="header-cta-btn">Compartilhar <i class="fas fa-share-alt"></i></a>
+</header>
+
+<div class="skeleton-screen" id="skeleton-screen">
+  <div class="sk-logo shimmer"></div>
+  <div class="sk-title shimmer" style="width:240px;margin-bottom:10px"></div>
+  <div class="sk-title shimmer" style="width:160px;margin-bottom:40px"></div>
+  <div class="sk-card shimmer"></div>
+  <div class="sk-card shimmer"></div>
+  <div class="sk-card shimmer"></div>
+</div>
+
+<div class="loading-screen" id="loading-screen" style="display:none">
+  <div class="loading-spinner"></div>
+</div>
+
+<div class="error-screen" id="error-screen" style="display:none; text-align:center; padding:60px 20px; flex-direction:column; align-items:center;">
+  <div style="font-size:64px; margin-bottom:20px;">✨</div>
+  <h2 style="font-size:2rem; font-weight:800; margin-bottom:16px;">Página não encontrada</h2>
+  <p style="color:var(--muted); max-width:320px; margin:0 auto 30px; line-height:1.6;">
+    Esta bio ainda não existe ou o link está incorreto. Que tal ter uma <strong>presença digital premium</strong> para o seu negócio também?
+  </p>
+  <a href="https://wa.me/5562981880182?text=Vi%20um%20link%20bio%20e%20quero%20um%20igual%20para%20o%20meu%20negócio!" class="btn-retry" style="background:var(--accent); color:#000; font-weight:800; border:none; padding:18px 40px; border-radius:50px; text-decoration:none; display:inline-block; box-shadow:0 10px 25px rgba(209,255,77,0.3); font-size:1.1rem; transition:transform 0.2s;">Quero minha Bio ↗</a>
+</div>
+
+<!-- Public Stats View Removed for Business Strategy -->
+
+<div id="bg-layer"></div>
+<div class="vignette"></div>
+<div class="ambient-orb orb-1"></div>
+<div class="ambient-orb orb-2"></div>
+<div class="ambient-orb orb-3"></div>
+
+<section id="hero">
+  <div class="floating-elements" id="particles"></div>
+  <div class="logo-glow-bg"></div>
+  <div class="logo-container" id="logo-container">
+    <div id="logo-left-half" class="logo-half"></div>
+    <div id="logo-right-half" class="logo-half"></div>
+    <div class="glow-line" id="glow"></div>
+  </div>
+  <div id="portal-flash"></div>
+  <div class="scroll-hint">
+    <button class="enter-btn" id="enter-portal">Toque para Entrar</button>
+    <span>Ou role para baixo</span>
+  </div>
+</section>
+
+<div id="welcome-toast" class="welcome-toast">
+  <i class="fas fa-sparkles"></i>
+  <span id="welcome-text">Bem-vindo(a)!</span>
+</div>
+
+<div id="back-to-top" class="back-to-top">
+  <i class="fas fa-arrow-up"></i>
+</div>
+
+<div id="main-wrapper">
+  <div class="top-reveal-area" id="top-reveal-area">
+    <div style="position:relative;display:inline-flex;align-items:center;justify-content:center">
+      <div style="position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.12) 0%,var(--accent-glow-mid) 30%,transparent 65%);animation:logoPulse 2.8s ease-in-out infinite;pointer-events:none"></div>
+    </div>
+  </div>
+  <div class="page-header" id="contacts-anchor">
+    <div class="page-header-badge"><i class="fas fa-store"></i> Fale Conosco</div>
+    <h2 class="page-title">Nossos <span class="accent" id="contacts-title">Contatos</span></h2>
+    <p class="page-sub" id="contacts-sub">Escolha como deseja falar com a gente.</p>
+  </div>
+  <div class="search-container" id="search-box" style="display:none">
+    <i class="fas fa-search search-icon"></i>
+    <input type="text" id="link-search" class="search-input" placeholder="Buscar links...">
+  </div>
+  <div class="cards-grid" id="cards-grid"></div>
+  <div class="info-bar" id="info-bar" style="display:none"></div>
+  <footer class="site-footer">
+    <a href="https://wa.me/5562981880182?text=Olá!%20Vi%20a%20bio%20de%20um%20cliente%20seu%20e%20gostei%20muito.%20Quero%20saber%20como%20fazer%20a%20minha!" class="promo-btn-footer">
+      <i class="fas fa-magic"></i> Quero minha Bio
+    </a>
+    <div id="footer-logo-wrap"></div>
+    <p class="footer-tagline" id="footer-tagline">Feito com <span class="accent">♥</span></p>
+    <i class="fas fa-heart footer-heart"></i>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const supabaseUrl = 'https://ejkoqkggtwkloukpekpv.supabase.co';
+const supabaseKey = 'sb_publishable_PIMTKiW8Y2ZX7zkp8_kxqQ_BguIfEL3';
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+const STORAGE_URL = 'https://ejkoqkggtwkloukpekpv.supabase.co/storage/v1/object/public/logos';
+
+const LINK_ICONS = {
+  whatsapp: {icon:'fab fa-whatsapp', img:`${STORAGE_URL}/WHA.png`, color:'#25d366', cat:'ATENDIMENTO', cta:'Falar no WhatsApp'},
+  instagram: {icon:'fab fa-instagram', img:`${STORAGE_URL}/INSTAGRAM.png`, color:'#e1306c', cat:'REDES SOCIAIS', cta:'Seguir Agora'},
+  phone: {icon:'fas fa-phone', img:`${STORAGE_URL}/TELEFO.png`, color:'#f97316', cat:'TELEFONE', cta:'Ligar Agora'},
+  maps: {icon:'fas fa-map-marker-alt', img:`${STORAGE_URL}/LOCAL.png`, color:'#06b6d4', cat:'LOCALIZAÇÃO', cta:'Ver no Mapa'},
+  website: {icon:'fas fa-globe', img:`${STORAGE_URL}/SITE.png`, color:'#818cf8', cat:'SITE OFICIAL', cta:'Visitar o Site'},
+  group: {icon:'fas fa-users', img:`${STORAGE_URL}/GRUPO.png`, color:'#3b82f6', cat:'PROMOÇÕES', cta:'Entrar no Grupo'},
+  app: {icon:'fas fa-mobile-alt', img:`${STORAGE_URL}/APP.png`, color:'#60a5fa', cat:'APLICATIVO', cta:'Baixar Aplicativo'},
+  message: {icon:'fas fa-comment', img:`${STORAGE_URL}/MENSA.png`, color:'#2dd4bf', cat:'ATENDIMENTO', cta:'Fale com a Loja'},
+  email: {icon:'fas fa-envelope', img:`${STORAGE_URL}/MENSA.png`, color:'#f59e0b', cat:'E-MAIL', cta:'Enviar E-mail'},
+};
+
+function colorMix(base, overlay, percent) {
+  return `color-mix(in srgb, ${base}, ${overlay} ${percent}%)`;
+}
+
+async function loadClient() {
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('client') || window.location.hash.substring(1);
+  if (!slug) {
+    showError("Por favor, especifique um cliente na URL (ex: linkbio.html#slug)");
+    return;
+  }
+  try {
+    const { data, error } = await supabase.from('clients').select('*').eq('slug', slug).single();
+    if (error) { showError(`O cliente "${slug}" não foi encontrado.`); return; }
+    if (data.status !== 'active') { showError("Este link bio está desativado."); return; }
+    buildPage(data);
+  } catch(e) { showError(`Erro de conexão: ${e.message}.`); }
+}
+
+function showError(msg) {
+  document.getElementById('loading-screen').style.display = 'none';
+  const errorScreen = document.getElementById('error-screen');
+  errorScreen.style.display = 'flex';
+  errorScreen.querySelector('p').innerText = msg;
+}
+
+function buildPage(data) {
+  const accent = data.accent_color || (data.theme === 'light' ? '#4d8fff' : '#d1ff4d');
+  const bg = data.bg_color || (data.theme === 'light' ? '#f8f9fa' : '#050505');
+  if (data.theme === 'light') document.body.classList.add('light-theme');
+  document.documentElement.style.setProperty('--accent', accent);
+  document.documentElement.style.setProperty('--bg', bg);
+  document.title = data.name;
+
+  if (data.welcome_message) {
+    document.getElementById('welcome-text').innerText = data.welcome_message;
+    setTimeout(() => {
+        document.getElementById('welcome-toast').classList.add('visible');
+        setTimeout(() => document.getElementById('welcome-toast').classList.remove('visible'), 4000);
+    }, 2000);
+  }
+
+  // Update Logo Glows (Portal and Reveal)
+  const glows = document.querySelectorAll('.logo-glow-bg, #reveal-glow-bg');
+  if (glows.length > 0) {
+    const hex = accent.replace('#','');
+    const r = parseInt(hex.substring(0,2),16)||209;
+    const g = parseInt(hex.substring(2,4),16)||255;
+    const b = parseInt(hex.substring(4,6),16)||77;
+    document.documentElement.style.setProperty('--accent-glow-mid',`rgba(${r},${g},${b},0.38)`);
+    document.documentElement.style.setProperty('--accent-glow-out',`rgba(${r},${g},${b},0.10)`);
+    glows.forEach(g => {
+      g.style.filter = `drop-shadow(0 0 50px rgba(${r},${g},${b},0.55))`;
+    });
+  }
+
+  // Header mini logo / Reveal logo / Footer Setup
+  const headerLogo = document.getElementById('header-logo-container');
+  const topReveal = document.getElementById('top-reveal-area');
+  if (data.logo) {
+    if(headerLogo) headerLogo.innerHTML = `<img src="${data.logo}" alt="${data.name}" class="header-logo-mini">`;
+    if(topReveal) {
+      topReveal.innerHTML = `
+        <div style="position:relative;display:inline-flex;align-items:center;justify-content:center">
+          <div style="position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.12) 0%,var(--accent-glow-mid) 30%,transparent 65%);animation:logoPulse 2.8s ease-in-out infinite;pointer-events:none"></div>
+          <img src="${data.logo}" alt="${data.name}" class="reveal-logo" style="position:relative;z-index:1">
+        </div>`;
+    }
+    document.getElementById('footer-logo-wrap').innerHTML = `<img src="${data.logo}" alt="${data.name}" class="footer-logo">`;
+    document.getElementById('logo-left-half').style.backgroundImage = `url('${data.logo}')`;
+    document.getElementById('logo-right-half').style.backgroundImage = `url('${data.logo}')`;
+    
+    // Smart Favicon (Prevent Squashing)
+    generateSquareFavicon(data.logo);
+  } else {
+    // Fallback: Text Logo
+    if(headerLogo) headerLogo.innerHTML = `<span class="header-logo-mini" style="font-weight:900; color:var(--accent)">${data.name.charAt(0)}</span>`;
+    if(topReveal) {
+      topReveal.innerHTML = `
+        <div style="position:relative;display:inline-flex;align-items:center;justify-content:center">
+          <div style="position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.12) 0%,var(--accent-glow-mid) 30%,transparent 65%);animation:logoPulse 2.8s ease-in-out infinite;pointer-events:none"></div>
+          <h1 class="reveal-logo-text" style="color:white; z-index:10; margin:0">${data.name}</h1>
+        </div>`;
+    }
+    document.getElementById('footer-logo-wrap').innerHTML = `<span style="font-weight:900; color:var(--accent)">${data.name}</span>`;
+    document.getElementById('logo-container').innerHTML = `
+      <div id="logo-left-half" style="display:flex; align-items:center; justify-content:center; font-size:25vw; font-weight:900; color:white; clip-path:inset(0 50% 0 0)">${data.name.charAt(0)}</div>
+      <div id="logo-right-half" style="display:flex; align-items:center; justify-content:center; font-size:25vw; font-weight:900; color:white; clip-path:inset(0 0 0 50%)">${data.name.charAt(0)}</div>
+    `;
+  }
+
+  if ((data.links||[]).length >= 8) document.getElementById('search-box').style.display = 'block';
+
+  renderLinks(data.links, data.slug);
+
+  document.getElementById('link-search').oninput = (e) => {
+    const term = e.target.value.toLowerCase();
+    const filtered = data.links.filter(l => l.label.toLowerCase().includes(term));
+    renderLinks(filtered, data.slug);
+  };
+}
+
+function renderLinks(links, slug) {
+  const grid = document.getElementById('cards-grid');
+  gsap.set(grid, {opacity: 0});
+  const now = new Date().getTime();
+  const activeLinks = (links||[]).filter(link => !link.expires_at || new Date(link.expires_at).getTime() > now);
+  grid.innerHTML = activeLinks.map((link, i) => {
+    const info = LINK_ICONS[link.type] || {icon:'fas fa-link', color: 'var(--accent)', cat:'LINK', cta:'Acessar'};
+    return `
+      <a href="${link.url}" class="card" target="_blank" rel="noopener" style="--card-color:${info.color}">
+        <div class="card-accent-line"></div>
+        <div class="card-body">
+          <span class="card-cat">${info.cat}</span>
+          <h3 class="card-name">${link.label}</h3>
+          <p class="card-desc">${link.description || 'Acesse para saber mais.'}</p>
+          <span class="card-cta">${info.cta} <i class="fas fa-arrow-right"></i></span>
+        </div>
+        <div class="card-icon-area">
+          <div class="icon-placeholder">
+            <div class="icon-glow" style="background:${info.color}"></div>
+            <div class="icon-inner">
+              ${info.img ? `<div class="icon-img" style="background-image:url('${info.img}')"></div>` : `<i class="${info.icon}"></i>`}
+            </div>
+          </div>
+        </div>
+      </a>
+    `;
+  }).join('');
+  document.getElementById('skeleton-screen').style.display = 'none';
+  initAnimations();
+  setupClickTracking(slug);
+}
+
+function setupClickTracking(slug) {
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+      if ('vibrate' in navigator) navigator.vibrate(50);
+      const label = card.querySelector('.card-name').innerText;
+      supabase.from('clicks').insert([{ client_slug: slug, link_label: label }]);
+    });
+  });
+}
+
+function initAnimations() {
+  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+  
+  // Pre-optimize for GPU
+  gsap.set(['#main-wrapper'], {
+    willChange: 'transform, opacity'
+  });
+
+  ScrollTrigger.create({
+    trigger: '#main-wrapper',
+    start: 'top top',
+    onEnter: () => document.getElementById('sticky-header').classList.add('visible'),
+    onLeaveBack: () => document.getElementById('sticky-header').classList.remove('visible'),
+  });
+
+  document.body.style.overflow = 'auto';
+  gsap.to('#cards-grid', {opacity:1, duration:.4, ease:'power2.out'});
+
+  // Card animations
+  document.querySelectorAll('.card').forEach((card, i) => {
+    gsap.from(card, {
+      scrollTrigger:{trigger:card,start:'top 90%'},
+      opacity:0,y:28,duration:.45,delay:(i%2)*.06,ease:'power2.out'
+    });
+  });
+}
+
+function generateSquareFavicon(url) {
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = function() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    
+    const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+    const x = (canvas.width / 2) - (img.width / 2) * scale;
+    const y = (canvas.height / 2) - (img.height / 2) * scale;
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+    
+    const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = canvas.toDataURL("image/png");
+    document.getElementsByTagName('head')[0].appendChild(link);
+  };
+  img.src = url;
+}
+
+loadClient();
+</script>
+</body>
+</html>

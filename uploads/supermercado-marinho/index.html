@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supermercado Marinho</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+    <div id="bg-layer"></div>
+    <div class="vignette"></div>
+
+    <header id="main-header">
+        <img src="logo.png" alt="Marinho" class="header-logo">
+        <a href="#" class="header-cta">Fale Conosco</a>
+    </header>
+
+    <!-- ── HERO: animação portal ── -->
+    <section id="hero">
+        <div class="floating-elements" id="particles"></div>
+
+        <div class="logo-container">
+            <div id="logo-left-half"  class="logo-half"></div>
+            <div id="logo-right-half" class="logo-half"></div>
+            <div class="glow-line" id="glow"></div>
+        </div>
+
+        <div id="portal-content">
+            <p class="portal-eyebrow">Bem-vindo ao</p>
+            <h1 class="portal-title">Supermercado<br><span class="accent">Marinho</span></h1>
+            <p class="portal-sub">Qualidade, variedade e economia<br>todo dia para você e sua família.</p>
+        </div>
+
+        <div class="scroll-hint">
+            Role para explorar
+            <div class="chevron"><i class="fas fa-chevron-down"></i></div>
+        </div>
+    </section>
+
+    <!-- ── CONTEÚDO PRINCIPAL ── -->
+    <div id="main-wrapper">
+
+        <!-- Cabeçalho da página -->
+        <div class="page-header">
+            <h2 class="page-title">Nossos <span class="accent">Contatos</span></h2>
+            <p class="page-sub">Escolha como deseja falar com a gente ou encontre tudo o que precisa.</p>
+        </div>
+
+        <!-- Grid de cards (2 colunas) -->
+        <div class="cards-grid">
+
+            <a href="#" class="card">
+                <div class="card-icon bg-green"><i class="fab fa-whatsapp"></i></div>
+                <span class="card-cat">MENSAGENS</span>
+                <h3 class="card-name">WhatsApp</h3>
+                <p class="card-desc">Fale com nossa equipe, tire dúvidas e receba as melhores ofertas direto no seu WhatsApp.</p>
+                <span class="card-cta">Falar no WhatsApp <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="#" class="card">
+                <div class="card-icon bg-blue"><i class="fas fa-tags"></i></div>
+                <span class="card-cat">PROMOÇÕES</span>
+                <h3 class="card-name">Grupo de Ofertas</h3>
+                <p class="card-desc">Entre no grupo e receba as promoções e ofertas exclusivas em primeira mão.</p>
+                <span class="card-cta">Entrar no Grupo <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="#" class="card">
+                <div class="card-icon bg-teal"><i class="fas fa-map-marker-alt"></i></div>
+                <span class="card-cat">LOCALIZAÇÃO</span>
+                <h3 class="card-name">Onde estamos</h3>
+                <p class="card-desc">Veja no mapa onde estamos e encontre o caminho mais fácil até a loja.</p>
+                <span class="card-cta">Ver no Mapa <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="#" class="card">
+                <div class="card-icon bg-indigo"><i class="fas fa-globe"></i></div>
+                <span class="card-cat">SITE OFICIAL</span>
+                <h3 class="card-name">Acessar nosso site</h3>
+                <p class="card-desc">Visite nosso site oficial e confira o catálogo completo de produtos e novidades.</p>
+                <span class="card-cta">Visitar o Site <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="#" class="card">
+                <div class="card-icon bg-navy"><i class="fas fa-mobile-alt"></i></div>
+                <span class="card-cat">APLICATIVO</span>
+                <h3 class="card-name">Baixe nosso app</h3>
+                <p class="card-desc">Ofertas exclusivas e muito mais na palma da sua mão. Disponível para iOS e Android.</p>
+                <span class="card-cta">Baixar Aplicativo <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="#" class="card">
+                <div class="card-icon bg-instagram"><i class="fab fa-instagram"></i></div>
+                <span class="card-cat">REDES SOCIAIS</span>
+                <h3 class="card-name">Siga no Instagram</h3>
+                <p class="card-desc">Acompanhe promoções, novidades e os bastidores do Supermercado Marinho.</p>
+                <span class="card-cta">Seguir Agora <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="#" class="card">
+                <div class="card-icon bg-red"><i class="fas fa-phone"></i></div>
+                <span class="card-cat">TELEFONE</span>
+                <h3 class="card-name">Ligar agora</h3>
+                <p class="card-desc">Fale diretamente com nossa equipe por telefone para informações rápidas.</p>
+                <span class="card-cta">Ligar Agora <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="#" class="card">
+                <div class="card-icon bg-chat"><i class="fas fa-comments"></i></div>
+                <span class="card-cat">SUPORTE</span>
+                <h3 class="card-name">Falar com a loja</h3>
+                <p class="card-desc">Dúvidas, sugestões ou informações? Nossa equipe está pronta para atender.</p>
+                <span class="card-cta">Fale com a Loja <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+        </div><!-- /cards-grid -->
+
+        <!-- Barra de diferenciais -->
+        <div class="info-bar">
+            <div class="info-item">
+                <i class="fas fa-shield-alt"></i>
+                <span>Segurança</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-tags"></i>
+                <span>Preço baixo</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-box-open"></i>
+                <span>Variedade</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-clock"></i>
+                <span>Horário</span>
+            </div>
+        </div>
+
+        <footer class="site-footer">
+            <p class="footer-brand">Supermercado Marinho</p>
+            <p class="footer-tagline">Onde sua compra <span class="accent">rende mais!</span></p>
+            <i class="fas fa-heart footer-heart"></i>
+        </footer>
+
+    </div><!-- /main-wrapper -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
