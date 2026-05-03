@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Link Bio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #d1ff4d;
+            --primary-dark: #b8e63d;
+            --bg: #020b1c;
+            --surface: #0a162d;
+            --surface-light: #162545;
+            --text: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --border: rgba(255, 255, 255, 0.1);
+            --radius: 12px;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Login Screen */
+        #login-screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, var(--surface) 0%, var(--bg) 100%);
+            z-index: 1000;
+        }
+
+        .login-card {
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .login-card h1 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+        .login-card p { color: var(--text-muted); margin-bottom: 30px; font-size: 14px; }
+
+        /* App Layout */
+        #app { display: none; min-height: 100vh; }
+        .sidebar {
+            width: 260px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            height: 100vh;
+            position: fixed;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content { margin-left: 260px; padding: 40px; width: calc(100% - 260px); }
+
+        .logo { font-size: 20px; font-weight: 800; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+        .logo i { color: var(--primary); }
+
+        .nav-item {
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            color: var(--text-muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--surface-light);
+            color: var(--text);
+        }
+
+        .nav-item.active i { color: var(--primary); }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary { background: var(--primary); color: #000; }
+        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-outline:hover { background: var(--surface-light); }
+        .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.2); }
+        .btn-danger:hover { background: var(--accent-red); color: white; }
+
+        /* Header */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .page-header h2 { font-size: 28px; font-weight: 800; }
+
+        /* Table/List */
+        .client-list { display: grid; gap: 16px; }
+        .client-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+        .client-card:hover { border-color: rgba(255,255,255,0.2); background: var(--surface-light); }
+
+        .client-info { display: flex; align-items: center; gap: 16px; }
+        .client-logo { width: 48px; height: 48px; border-radius: 12px; background: #fff; object-fit: contain; padding: 4px; }
+        .client-details h3 { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+        .client-details p { font-size: 13px; color: var(--text-muted); }
+
+        .client-status {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .status-active { background: rgba(209, 255, 77, 0.1); color: var(--primary); }
+        .status-inactive { background: rgba(255, 255, 255, 0.05); color: var(--text-muted); }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+        .form-control {
+            width: 100%;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: inherit;
+            outline: none;
+        }
+        .form-control:focus { border-color: var(--primary); }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        .modal-content {
+            background: var(--surface);
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            padding: 40px;
+        }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .modal-header h3 { font-size: 24px; font-weight: 800; }
+        .close-modal { cursor: pointer; font-size: 20px; color: var(--text-muted); }
+
+        /* Link Management */
+        .links-editor { margin-top: 30px; border-top: 1px solid var(--border); pt: 30px; }
+        .links-list { display: grid; gap: 10px; margin-bottom: 20px; }
+        .link-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 1fr 44px;
+            gap: 10px;
+            align-items: center;
+            background: var(--surface-light);
+            padding: 10px;
+            border-radius: var(--radius);
+        }
+
+        /* Color Inputs */
+        .color-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .color-picker-wrap { display: flex; align-items: center; gap: 10px; }
+        .color-picker-wrap input[type="color"] {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 8px;
+            background: none;
+            cursor: pointer;
+        }
+
+        /* Loading */
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 3000;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-card">
+            <h1>Link Bio Admin</h1>
+            <p>Faça login para gerenciar seus clientes.</p>
+            <div class="form-group">
+                <input type="email" id="login-email" class="form-control" placeholder="E-mail">
+            </div>
+            <div class="form-group">
+                <input type="password" id="login-pass" class="form-control" placeholder="Senha">
+            </div>
+            <button id="btn-login" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                Entrar <div class="loader" id="login-loader"></div>
+            </button>
+        </div>
+    </div>
+
+    <!-- App Shell -->
+    <div id="app">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-bolt"></i> LinkBio Admin
+            </div>
+            <nav>
+                <div class="nav-item active">
+                    <i class="fas fa-users"></i> Clientes
+                </div>
+                <!-- Add more nav items if needed -->
+            </nav>
+            <div style="margin-top: auto;">
+                <div class="nav-item" id="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="page-header">
+                <div>
+                    <h2>Clientes</h2>
+                    <p style="color: var(--text-muted);">Gerencie as bios de seus clientes</p>
+                </div>
+                <button class="btn btn-primary" id="btn-new-client">
+                    <i class="fas fa-plus"></i> Novo Cliente
+                </button>
+            </header>
+
+            <div class="client-list" id="client-list">
+                <!-- Clients will be injected here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Client Modal -->
+    <div class="modal" id="client-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Novo Cliente</h3>
+                <i class="fas fa-times close-modal" id="close-modal"></i>
+            </div>
+
+            <form id="client-form">
+                <input type="hidden" id="edit-slug">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Nome do Cliente</label>
+                        <input type="text" id="client-name" class="form-control" required placeholder="Ex: Supermercado Marinho">
+                    </div>
+                    <div class="form-group">
+                        <label>Slug (URL)</label>
+                        <input type="text" id="client-slug" class="form-control" required placeholder="ex: supermercado-marinho">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Logo URL</label>
+                    <input type="url" id="client-logo" class="form-control" placeholder="https://exemplo.com/logo.png">
+                </div>
+
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="client-desc" class="form-control" rows="2" placeholder="Fale com nossa equipe..."></textarea>
+                </div>
+
+                <div class="color-inputs">
+                    <div class="form-group">
+                        <label>Cor de Destaque</label>
+                        <div class="color-picker-wrap">
+                            <input type="color" id="client-accent" value="#d1ff4d">
+                            <input type="text" id="client-accent-text" class="form-control" value="#d1ff4d">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Cor de Fundo</label>
+                        <div class="color-picker-wrap">
+                            <input type="color" id="client-bg" value="#020b1c">
+                            <input type="text" id="client-bg-text" class="form-control" value="#020b1c">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="client-status" class="form-control">
+                        <option value="active">Ativo</option>
+                        <option value="inactive">Inativo</option>
+                    </select>
+                </div>
+
+                <div class="links-editor">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; margin-top: 20px;">
+                        <h4 style="font-weight: 700;">Links</h4>
+                        <button type="button" class="btn btn-outline" id="btn-add-link" style="padding: 6px 12px; font-size: 12px;">
+                            <i class="fas fa-plus"></i> Adicionar Link
+                        </button>
+                    </div>
+                    <div class="links-list" id="links-list">
+                        <!-- Links will be injected here -->
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 30px;">
+                    <button type="button" class="btn btn-outline" id="btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-client">
+                        Salvar Cliente <div class="loader" id="save-loader"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB5Dxg6wrBGnB75mx-nyd0jQc8gSRBx4qQ",
+            authDomain: "link-bio-6da09.firebaseapp.com",
+            projectId: "link-bio-6da09",
+            storageBucket: "link-bio-6da09.firebasestorage.app",
+            messagingSenderId: "901664763233",
+            appId: "1:901664763233:web:7e14ea4bb7f93f97dd2920"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global Error Tracking
+        window.onerror = function(msg, url, line, col, error) {
+            alert(`ERRO GLOBAL: ${msg}\nLinha: ${line}\nErro: ${error}`);
+            console.error("Global Error:", {msg, url, line, col, error});
+            return false;
+        };
+
+        const LINK_TYPES = [
+            { id: 'whatsapp', label: 'WhatsApp' },
+            { id: 'instagram', label: 'Instagram' },
+            { id: 'phone', label: 'Telefone' },
+            { id: 'maps', label: 'Localização' },
+            { id: 'website', label: 'Site' },
+            { id: 'group', label: 'Grupo' },
+            { id: 'app', label: 'App' },
+            { id: 'message', label: 'Mensagem' },
+            { id: 'email', label: 'E-mail' }
+        ];
+
+        // Auth state
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'flex';
+                loadClients();
+            } else {
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('app').style.display = 'none';
+            }
+        });
+
+        // Login
+        document.getElementById('btn-login').addEventListener('click', async () => {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            const loader = document.getElementById('login-loader');
+            
+            if (!email || !pass) return showToast("Preencha todos os campos");
+
+            try {
+                console.log("Tentando login com:", email);
+                await signInWithEmailAndPassword(auth, email, pass);
+                console.log("Login realizado com sucesso!");
+            } catch (e) {
+                console.error("Login error:", e);
+                alert("Erro ao entrar: " + e.message);
+                showToast("Erro ao entrar: " + e.message);
+            } finally {
+                loader.style.display = 'none';
+            }
+        });
+
+        // Logout
+        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+
+        // Real-time Clients Listener
+        let unsubscribe = null;
+        function loadClients() {
+            console.log("Iniciando listener em tempo real...");
+            if (unsubscribe) unsubscribe();
+
+            const q = query(collection(db, 'clients'));
+            
+            unsubscribe = onSnapshot(q, (snap) => {
+                const list = document.getElementById('client-list');
+                list.innerHTML = '';
+                
+                if (snap.empty) {
+                    list.innerHTML = '<p style="text-align:center; color:var(--text-muted); margin-top:20px;">Nenhum cliente cadastrado.</p>';
+                    return;
+                }
+
+                snap.forEach(docSnap => {
+                    const client = docSnap.data();
+                    const card = document.createElement('div');
+                    card.className = 'client-card';
+                    const viewUrl = `linkbio.html?client=${docSnap.id}`;
+                    
+                    card.innerHTML = `
+                        <div class="client-info">
+                            ${client.logo ? `<img src="${client.logo}" class="client-logo">` : `<div class="client-logo" style="display:flex;align-items:center;justify-content:center;background:var(--surface-light);color:var(--primary);font-weight:800">${(client.name || 'C')[0]}</div>`}
+                            <div class="client-details">
+                                <h3>${client.name || 'Sem nome'}</h3>
+                                <a href="${viewUrl}" target="_blank" style="font-size: 12px; color: var(--primary); text-decoration: none;">
+                                    <i class="fas fa-external-link-alt"></i> /${docSnap.id}
+                                </a>
+                            </div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <span class="client-status status-${client.status || 'active'}">${client.status || 'active'}</span>
+                            <button class="btn btn-outline btn-edit" data-slug="${docSnap.id}">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="btn btn-danger btn-delete" data-slug="${docSnap.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    list.appendChild(card);
+                });
+            }, (error) => {
+                console.error("Erro no listener:", error);
+                showToast("Erro ao sincronizar dados.");
+            });
+        }
+
+        // Global Event Delegation for Client List
+        document.getElementById('client-list').addEventListener('click', (e) => {
+            const btnEdit = e.target.closest('.btn-edit');
+            const btnDelete = e.target.closest('.btn-delete');
+            
+            if (btnEdit) {
+                const slug = btnEdit.getAttribute('data-slug');
+                editClient(slug);
+            } else if (btnDelete) {
+                const slug = btnDelete.getAttribute('data-slug');
+                deleteClient(slug);
+            }
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('client-modal');
+        const closeModal = () => {
+            modal.style.display = 'none';
+            document.getElementById('client-form').reset();
+            document.getElementById('links-list').innerHTML = '';
+        };
+
+        document.getElementById('btn-new-client').onclick = () => {
+            document.getElementById('client-form').reset();
+            document.getElementById('edit-slug').value = '';
+            document.getElementById('client-slug').value = '';
+            document.getElementById('client-slug').disabled = false;
+            document.getElementById('links-list').innerHTML = '';
+            document.getElementById('modal-title').innerText = 'Novo Cliente';
+            modal.style.display = 'flex';
+        };
+
+        document.getElementById('close-modal').onclick = closeModal;
+        document.getElementById('btn-cancel').onclick = closeModal;
+
+        // Link Management
+        document.getElementById('btn-add-link').onclick = () => addLinkRow();
+
+        function addLinkRow(link = { type: 'whatsapp', label: '', url: '' }) {
+            const list = document.getElementById('links-list');
+            const row = document.createElement('div');
+            row.className = 'link-row';
+            row.innerHTML = `
+                <select class="form-control link-type">
+                    ${LINK_TYPES.map(t => `<option value="${t.id}" ${link.type === t.id ? 'selected' : ''}>${t.label}</option>`).join('')}
+                </select>
+                <input type="text" class="form-control link-label" placeholder="Rótulo" value="${link.label}">
+                <input type="text" class="form-control link-url" placeholder="URL" value="${link.url}">
+                <button type="button" class="btn btn-danger btn-remove-link" style="padding:0; width:44px; height:44px; justify-content:center;">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            row.querySelector('.btn-remove-link').onclick = () => row.remove();
+            list.appendChild(row);
+        }
+
+        // Color Sync
+        document.getElementById('client-accent').oninput = e => document.getElementById('client-accent-text').value = e.target.value;
+        document.getElementById('client-bg').oninput = e => document.getElementById('client-bg-text').value = e.target.value;
+
+        // Save Client Logic
+        async function saveClient() {
+            const form = document.getElementById('client-form');
+            
+            if (!form.reportValidity()) return;
+
+            const loader = document.getElementById('save-loader');
+            const btnSave = document.getElementById('btn-save-client');
+            
+            loader.style.display = 'inline-block';
+            btnSave.disabled = true;
+
+            try {
+                // Saneamento do Slug: minúsculo, sem espaços, apenas letras, números e hífens
+                let slug = document.getElementById('client-slug').value.trim().toLowerCase();
+                slug = slug.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                
+                const name = document.getElementById('client-name').value.trim();
+                const logo = document.getElementById('client-logo').value.trim();
+                const description = document.getElementById('client-desc').value.trim();
+                const accentColor = document.getElementById('client-accent-text').value.trim();
+                const bgColor = document.getElementById('client-bg-text').value.trim();
+                const status = document.getElementById('client-status').value;
+
+                if (!slug) throw new Error("Slug inválido. Use apenas letras e números.");
+                if (!name) throw new Error("Nome do cliente é obrigatório.");
+
+                console.log("Enviando dados para o Firebase...", slug);
+
+                const links = [];
+                document.querySelectorAll('.link-row').forEach(row => {
+                    const type = row.querySelector('.link-type').value;
+                    const label = row.querySelector('.link-label').value.trim();
+                    const url = row.querySelector('.link-url').value.trim();
+                    if (label || url) links.push({ type, label, url });
+                });
+
+                const clientData = {
+                    name, logo, description, accentColor, bgColor, status, links,
+                    updatedAt: new Date().toISOString()
+                };
+
+                // Aguarda confirmação real do banco de dados
+                await setDoc(doc(db, 'clients', slug), clientData);
+                
+                // Verificação extra: tenta ler o dado logo após salvar
+                const verify = await getDoc(doc(db, 'clients', slug));
+                if (!verify.exists()) {
+                    throw new Error("O dado foi enviado, mas não pôde ser lido de volta. Verifique as regras de segurança do seu Firestore (devem permitir leitura/escrita pública).");
+                }
+
+                console.log("Gravado e verificado com sucesso no Firestore!");
+                showToast("Cliente salvo com sucesso!");
+                
+                // Fecha o modal apenas após a confirmação
+                modal.style.display = 'none';
+                form.reset();
+                document.getElementById('links-list').innerHTML = '';
+                
+            } catch (err) {
+                console.error("Erro fatal ao salvar:", err);
+                alert("ERRO AO SALVAR: " + err.message);
+            } finally {
+                loader.style.display = 'none';
+                btnSave.disabled = false;
+            }
+        }
+
+        // Atribui o evento ao botão diretamente
+        document.getElementById('btn-save-client').onclick = (e) => {
+            e.preventDefault();
+            saveClient();
+        };
+
+        // Mantém o listener do formulário como backup ou remove se preferir
+        document.getElementById('client-form').onsubmit = (e) => {
+            e.preventDefault();
+            saveClient();
+        };
+
+        // Edit Client
+        async function editClient(slug) {
+            console.log("Abrindo edição para:", slug);
+            
+            // Feedback visual de carregamento no botão
+            const btn = document.querySelector(`.btn-edit[data-slug="${slug}"]`);
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            try {
+                const snap = await getDoc(doc(db, 'clients', slug));
+                if (!snap.exists()) return showToast("Cliente não encontrado");
+                const data = snap.data();
+
+                document.getElementById('edit-slug').value = slug;
+                document.getElementById('client-slug').value = slug;
+                document.getElementById('client-slug').disabled = true;
+                document.getElementById('client-name').value = data.name || '';
+                document.getElementById('client-logo').value = data.logo || '';
+                document.getElementById('client-desc').value = data.description || '';
+                document.getElementById('client-accent-text').value = data.accentColor || '#d1ff4d';
+                document.getElementById('client-accent').value = data.accentColor || '#d1ff4d';
+                document.getElementById('client-bg-text').value = data.bgColor || '#020b1c';
+                document.getElementById('client-bg').value = data.bgColor || '#020b1c';
+                document.getElementById('client-status').value = data.status || 'active';
+
+                const list = document.getElementById('links-list');
+                list.innerHTML = '';
+                (data.links || []).forEach(l => addLinkRow(l));
+
+                document.getElementById('modal-title').innerText = 'Editar Cliente';
+                modal.style.display = 'flex';
+            } catch (e) {
+                console.error("Error loading client for edit:", e);
+                alert("Erro ao carregar dados para edição.");
+            } finally {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
+        }
+
+        // Delete Client
+        async function deleteClient(slug) {
+            if (!confirm(`Tem certeza que deseja excluir o cliente ${slug}?`)) return;
+            
+            console.log("Deleting client:", slug);
+            try {
+                await deleteDoc(doc(db, 'clients', slug));
+                showToast("Cliente excluído.");
+                loadClients();
+            } catch (e) {
+                console.error("Error deleting client:", e);
+                showToast("Erro ao excluir.");
+            }
+        }
+
+        function showToast(msg) {
+            console.log("Toast:", msg);
+            const t = document.getElementById('toast');
+            if (!t) return;
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => {
+                t.style.display = 'none';
+            }, 3000);
+        }
+
+
+    </script>
+</body>
+</html>

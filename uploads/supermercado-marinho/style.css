@@ -1,0 +1,359 @@
+/* ── RESET ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg:          #020b1a;
+    --bg2:         #041228;
+    --accent:      #d1ff4d;
+    --text:        #ffffff;
+    --muted:       rgba(255,255,255,0.52);
+    --glass:       rgba(255,255,255,0.05);
+    --glass-b:     rgba(255,255,255,0.09);
+    --radius:      18px;
+}
+
+html, body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ── BACKGROUND ── */
+#bg-layer {
+    position: fixed;
+    inset: 0;
+    background: url('bg.png') center / cover no-repeat;
+    opacity: 0.12;
+    z-index: -1;
+}
+
+.vignette {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, transparent 25%, var(--bg) 75%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ── HEADER ── */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    background: rgba(2, 11, 26, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--glass-b);
+}
+
+.header-logo { height: 34px; object-fit: contain; }
+
+.header-cta {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+}
+
+/* ── HERO ── */
+#hero {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    z-index: 20;
+}
+
+/* Partículas */
+.floating-elements {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* ── LOGO PORTAL ── */
+.logo-container {
+    position: relative;
+    width: min(460px, 88vw);
+    aspect-ratio: 320 / 180;
+    z-index: 10;
+    transform-origin: center center;
+}
+
+.logo-half {
+    position: absolute;
+    inset: 0;
+    background: url('logo.png') center / contain no-repeat;
+}
+
+#logo-left-half  { clip-path: inset(0 50% 0 0); }
+#logo-right-half { clip-path: inset(0 0 0 50%); }
+
+/* Linha de luz na abertura */
+.glow-line {
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    width: 2px;
+    height: 140%;
+    background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+    box-shadow: 0 0 18px var(--accent), 0 0 50px rgba(209,255,77,0.4);
+    opacity: 0;
+    transform: translateX(-50%);
+    z-index: 11;
+    transform-origin: center center;
+}
+
+/* ── PORTAL CONTENT (dentro do hero) ── */
+#portal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 15;
+    width: 90%;
+    max-width: 400px;
+    pointer-events: none;
+}
+
+.portal-eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+}
+
+.portal-title {
+    font-size: clamp(1.8rem, 8vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 14px;
+}
+
+.portal-sub {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.65;
+}
+
+.accent { color: var(--accent); }
+
+/* ── SCROLL HINT ── */
+.scroll-hint {
+    position: absolute;
+    bottom: 34px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    white-space: nowrap;
+    z-index: 12;
+}
+
+.scroll-hint .chevron {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--accent);
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(5px); }
+}
+
+/* ═══════════════════════════
+   MAIN WRAPPER
+═══════════════════════════ */
+#main-wrapper {
+    position: relative;
+    z-index: 30;
+    opacity: 0;
+    padding-bottom: 40px;
+}
+
+/* ── Cabeçalho da página ── */
+.page-header {
+    padding: 56px 24px 28px;
+    text-align: center;
+}
+
+.page-title {
+    font-size: clamp(2rem, 9vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 12px;
+}
+
+.page-sub {
+    font-size: 0.9rem;
+    color: var(--muted);
+    max-width: 320px;
+    margin: 0 auto;
+    line-height: 1.65;
+}
+
+/* ── Grid de cards ── */
+.cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 0 14px 28px;
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    background: var(--glass);
+    border: 1px solid var(--glass-b);
+    border-radius: var(--radius);
+    padding: 20px 16px;
+    text-decoration: none;
+    color: var(--text);
+    transition: background 0.18s, transform 0.18s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.card:active { transform: scale(0.97); background: rgba(255,255,255,0.08); }
+
+@media (hover: hover) {
+    .card:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+}
+
+/* Ícone do card */
+.card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    margin-bottom: 14px;
+    flex-shrink: 0;
+    color: #fff;
+}
+
+.bg-green     { background: #25d366; }
+.bg-blue      { background: #007aff; }
+.bg-teal      { background: #0e9aba; }
+.bg-indigo    { background: #5856d6; }
+.bg-navy      { background: #1c2d4a; border: 1px solid rgba(255,255,255,0.12); }
+.bg-instagram { background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%); }
+.bg-red       { background: #ff3b30; }
+.bg-chat      { background: #2db4cb; }
+
+/* Textos do card */
+.card-cat {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.card-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.card-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.58;
+    flex-grow: 1;
+    margin-bottom: 16px;
+}
+
+.card-cta {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: auto;
+}
+
+.card-cta i { font-size: 10px; }
+
+/* ── Barra de info ── */
+.info-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 0 14px 36px;
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.info-item {
+    background: var(--glass);
+    border: 1px solid var(--glass-b);
+    border-radius: 13px;
+    padding: 14px 6px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+}
+
+.info-item i    { font-size: 18px; color: var(--accent); }
+.info-item span { font-size: 10px; font-weight: 600; color: var(--muted); }
+
+/* ── Footer ── */
+.site-footer {
+    padding: 32px 24px 56px;
+    text-align: center;
+}
+
+.footer-brand   { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+.footer-tagline { font-size: 0.82rem; color: var(--muted); }
+.footer-heart   { font-size: 20px; color: #ff3b30; display: block; margin-top: 14px; }
+
+/* ── Responsive: telas maiores ── */
+@media (min-width: 480px) {
+    .cards-grid { gap: 12px; padding: 0 20px 32px; }
+    .card { padding: 24px 20px; }
+    .card-icon { width: 56px; height: 56px; font-size: 23px; border-radius: 15px; }
+    .card-name { font-size: 1rem; }
+    .card-desc { font-size: 0.8rem; }
+    .info-bar  { padding: 0 20px 40px; }
+}
+
+@media (min-width: 640px) {
+    .page-title { font-size: 2.8rem; }
+    .page-sub   { max-width: 420px; font-size: 1rem; }
+    .cards-grid { max-width: 640px; }
+}
