@@ -12,7 +12,7 @@
 <meta property="og:description" content="Acesse todos os links oficiais em um só lugar.">
 <meta property="og:image" content="https://ejkoqkggtwkloukpekpv.supabase.co/storage/v1/object/public/logos/GRUPO.png">
 
-<link rel="manifest" href="manifest.json">
+<link id="manifest-link" rel="manifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -20,10 +20,20 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#050505;
+  --bg-soft:#0f0f0f;
   --accent:#d1ff4d;
   --text:#ffffff;
   --muted:rgba(255,255,255,0.7);
+  --border:rgba(255,255,255,0.12);
   --radius:24px;
+}
+body.light-theme {
+  --bg:#f8f9fa;
+  --bg-soft:#ffffff;
+  --accent:#4d8fff; /* Azul suave para modo claro */
+  --text:#1a1a1a;
+  --muted:rgba(0,0,0,0.6);
+  --border:rgba(0,0,0,0.08);
 }
 html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 #bg-layer{position:fixed;inset:0;background:url('bg.png') center/cover no-repeat;opacity:0.08;z-index:-2}
@@ -89,6 +99,28 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);colo
 .footer-logo-text{font-size:1.2rem;font-weight:900;opacity:.7}
 .footer-tagline{font-size:.85rem;color:var(--muted)}
 .footer-heart{font-size:20px;color:#ff3b30}
+.promo-btn-footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  margin-bottom: 15px;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+}
+.promo-btn-footer:hover {
+  background: var(--accent);
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px color-mix(in srgb, var(--accent) 40%, transparent);
+}
 @media(min-width:600px){
   .cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 20px 36px;max-width:720px}
   .card{flex-direction:column;min-height:unset}
@@ -144,12 +176,16 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);colo
   <div class="loading-spinner"></div>
 </div>
 
-<div class="error-screen" id="error-screen">
-  <i class="fas fa-exclamation-triangle"></i>
-  <h2>Página não encontrada</h2>
-  <p>O link que você está tentando acessar não existe ou foi removido.</p>
-  <a href="javascript:location.reload()" class="btn-retry">Tentar Novamente</a>
+<div class="error-screen" id="error-screen" style="display:none; text-align:center; padding:60px 20px; flex-direction:column; align-items:center;">
+  <div style="font-size:64px; margin-bottom:20px;">✨</div>
+  <h2 style="font-size:2rem; font-weight:800; margin-bottom:16px;">Página não encontrada</h2>
+  <p style="color:var(--muted); max-width:320px; margin:0 auto 30px; line-height:1.6;">
+    Esta bio ainda não existe ou o link está incorreto. Que tal ter uma <strong>presença digital premium</strong> para o seu negócio também?
+  </p>
+  <a href="https://wa.me/5562981880182?text=Vi%20um%20link%20bio%20e%20quero%20um%20igual%20para%20o%20meu%20negócio!" class="btn-retry" style="background:var(--accent); color:#000; font-weight:800; border:none; padding:18px 40px; border-radius:50px; text-decoration:none; display:inline-block; box-shadow:0 10px 25px rgba(209,255,77,0.3); font-size:1.1rem; transition:transform 0.2s;">Quero minha Bio ↗</a>
 </div>
+
+<!-- Public Stats View Removed for Business Strategy -->
 
 <div id="bg-layer"></div>
 <div class="vignette"></div>
@@ -180,6 +216,9 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);colo
   <div class="cards-grid" id="cards-grid"></div>
   <div class="info-bar" id="info-bar" style="display:none"></div>
   <footer class="site-footer">
+    <a href="https://wa.me/5562981880182?text=Olá!%20Vi%20a%20bio%20de%20um%20cliente%20seu%20e%20gostei%20muito.%20Quero%20saber%20como%20fazer%20a%20minha!" class="promo-btn-footer">
+      <i class="fas fa-magic"></i> Quero minha Bio
+    </a>
     <div id="footer-logo-wrap"></div>
     <p class="footer-tagline" id="footer-tagline">Feito com <span class="accent">♥</span></p>
     <i class="fas fa-heart footer-heart"></i>
@@ -258,15 +297,21 @@ function showError(msg) {
 }
 
 function buildPage(data) {
-  const accent = data.accent_color || '#d1ff4d';
-  const bg = data.bg_color || '#020b1c';
+  const accent = data.accent_color || (data.theme === 'light' ? '#4d8fff' : '#d1ff4d');
+  const bg = data.bg_color || (data.theme === 'light' ? '#f8f9fa' : '#050505');
+
+  if (data.theme === 'light') {
+    document.body.classList.add('light-theme');
+  } else {
+    document.body.classList.remove('light-theme');
+  }
 
   // CSS vars
   document.documentElement.style.setProperty('--accent', accent);
   document.documentElement.style.setProperty('--bg', bg);
   
   // Calculate soft bg for hero
-  const softBg = colorMix(bg, accent, 15);
+  const softBg = data.theme === 'light' ? '#e9ecef' : colorMix(bg, accent, 15);
   document.documentElement.style.setProperty('--bg-soft', softBg);
   
   // Update Orbs
@@ -299,21 +344,54 @@ function buildPage(data) {
 
   document.title = data.name;
   
+  // Dynamic PWA Manifest
+  const manifest = {
+    "name": data.name,
+    "short_name": data.name,
+    "start_url": window.location.href,
+    "display": "standalone",
+    "background_color": bg,
+    "theme_color": accent,
+    "icons": [{
+      "src": data.logo || "https://ejkoqkggtwkloukpekpv.supabase.co/storage/v1/object/public/logos/GRUPO.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+  const manifestURL = URL.createObjectURL(blob);
+  document.getElementById('manifest-link').setAttribute('href', manifestURL);
+
   // Dynamic Meta Tags (Client-side update)
   document.querySelector('meta[property="og:title"]').setAttribute('content', data.name);
   document.querySelector('meta[property="og:description"]').setAttribute('content', data.description || 'Acesse nossos links oficiais.');
   if (data.logo) {
     document.querySelector('meta[property="og:image"]').setAttribute('content', data.logo);
   }
-  // Dynamic Favicon
+  // Dynamic Favicon with Aspect Ratio Protection
   if (data.logo) {
-    let favicon = document.querySelector("link[rel~='icon']");
-    if (!favicon) {
-      favicon = document.createElement('link');
-      favicon.rel = 'icon';
-      document.head.appendChild(favicon);
-    }
-    favicon.href = data.logo;
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const size = Math.max(img.width, img.height);
+      canvas.width = size;
+      canvas.height = size;
+      // Draw centered without stretching
+      const x = (size - img.width) / 2;
+      const y = (size - img.height) / 2;
+      ctx.drawImage(img, x, y);
+      
+      let favicon = document.querySelector("link[rel~='icon']");
+      if (!favicon) {
+        favicon = document.createElement('link');
+        favicon.rel = 'icon';
+        document.head.appendChild(favicon);
+      }
+      favicon.href = canvas.toDataURL("image/png");
+    };
+    img.src = data.logo;
   }
 
   // Dynamic Share Link
@@ -408,7 +486,7 @@ function buildPage(data) {
           <div class="icon-placeholder">
             <div class="icon-glow" style="background:${info.color}"></div>
             <div class="icon-inner">
-              ${info.img ? `<div class="icon-img" style="background-image:url('${info.img}')" aria-label="${link.label}"></div>` : `<i class="${info.icon}"></i>`}
+              ${info.img ? `<div class="icon-img" style="background-image:url('${info.img}')" aria-label="${link.label}" loading="lazy"></div>` : `<i class="${info.icon}"></i>`}
             </div>
           </div>
         </div>
@@ -421,6 +499,7 @@ function buildPage(data) {
   initAnimations();
   setupClickTracking(data.slug);
 }
+
 
 function setupClickTracking(slug) {
   document.querySelectorAll('.card').forEach(card => {
