@@ -10,7 +10,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#020b1c;
+  --bg:#050505;
   --accent:#d1ff4d;
   --text:#ffffff;
   --muted:rgba(255,255,255,0.7);
@@ -23,7 +23,7 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);colo
 .orb-2{width:45vw;height:45vw;top:30vh;right:-15vw;background:radial-gradient(circle,color-mix(in srgb, var(--accent) 30%, #0e2fa0) 0%,transparent 70%);opacity:.18}
 .orb-3{width:60vw;height:60vw;bottom:-20vw;left:10vw;background:radial-gradient(circle,color-mix(in srgb, var(--accent) 20%, #102060) 0%,transparent 70%);opacity:.22}
 .vignette{position:fixed;inset:0;background:radial-gradient(ellipse 100% 80% at 50% 35%,transparent 15%,var(--bg) 78%);z-index:0;pointer-events:none}
-#hero{height:100vh;width:100%;position:fixed;top:0;left:0;display:flex;justify-content:center;align-items:center;overflow:hidden;z-index:2000;background:radial-gradient(ellipse 160% 110% at 50% 60%, var(--bg-soft, #0c2255) 0%, var(--bg, #020b1c) 65%)}
+#hero{height:100vh;width:100%;position:fixed;top:0;left:0;display:flex;justify-content:center;align-items:center;overflow:hidden;z-index:2000;background:radial-gradient(ellipse 160% 110% at 50% 60%, var(--bg-soft, #0f0f0f) 0%, var(--bg, #050505) 65%)}
 .logo-glow-bg{position:absolute;width:72vw;height:72vw;max-width:420px;max-height:420px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb, var(--accent) 32%, transparent) 0%,color-mix(in srgb, var(--accent) 16%, transparent) 35%,color-mix(in srgb, var(--accent) 6%, transparent) 60%,transparent 75%);z-index:8;pointer-events:none;animation:logoPulse 3.5s ease-in-out infinite}
 @keyframes logoPulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
 .floating-elements{position:absolute;inset:0;pointer-events:none;z-index:5}
