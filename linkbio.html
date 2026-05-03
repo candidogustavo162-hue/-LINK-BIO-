@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Link Bio</title>
+<title>Link Bio | Sua Identidade Digital</title>
+<meta name="description" content="Conecte-se conosco através de todos os nossos canais oficiais.">
+
+<!-- Open Graph / Social Media -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Link Bio Profissional">
+<meta property="og:description" content="Acesse todos os links oficiais em um só lugar.">
+<meta property="og:image" content="https://ejkoqkggtwkloukpekpv.supabase.co/storage/v1/object/public/logos/WHA.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -96,20 +104,50 @@ html,body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);colo
 .error-screen{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:12px;text-align:center;padding:24px}
 .error-screen i{font-size:48px;color:rgba(255,77,109,.5);margin-bottom:8px}
 .error-screen h2{font-size:1.4rem;font-weight:800}
-.error-screen p{color:var(--muted);font-size:.9rem}
+.error-screen p{color:var(--muted);font-size:.9rem;margin-bottom:20px}
+.error-screen .btn-retry{background:var(--accent);color:#000;padding:12px 24px;border-radius:30px;text-decoration:none;font-weight:700;font-size:14px;transition:transform .2s}
+.error-screen .btn-retry:active{transform:scale(.95)}
+
+/* Fixed Header */
+.sticky-header{position:fixed;top:0;left:0;right:0;height:70px;background:rgba(2,11,28,0.4);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:1000;transform:translateY(-100%);transition:transform .5s cubic-bezier(0.4,0,0.2,1);pointer-events:none}
+.sticky-header.visible{transform:translateY(0);pointer-events:auto}
+.header-logo-mini{height:32px;width:auto;object-fit:contain}
+.header-cta-btn{background:var(--accent);color:#000;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:700;text-decoration:none;box-shadow:0 4px 15px color-mix(in srgb, var(--accent) 30%, transparent)}
+
+/* Skeleton Loading */
+.skeleton-screen{position:fixed;inset:0;background:var(--bg);z-index:9998;padding:80px 20px;display:flex;flex-direction:column;align-items:center;gap:20px;overflow:hidden}
+.sk-logo{width:120px;height:120px;background:rgba(255,255,255,0.05);border-radius:50%;margin-bottom:20px}
+.sk-title{width:200px;height:32px;background:rgba(255,255,255,0.05);border-radius:8px}
+.sk-card{width:100%;max-width:520px;height:140px;background:rgba(255,255,255,0.03);border-radius:24px;border:1px solid rgba(255,255,255,0.05)}
+.shimmer{background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent);background-size:200% 100%;animation:shimmer 1.5s infinite}
+@keyframes shimmer{0%{background-position:150% 0}100%{background-position:-50% 0}}
 </style>
 </head>
 <body>
 
-<div class="loading-screen" id="loading-screen">
+<header class="sticky-header" id="sticky-header">
+  <div id="header-logo-container"></div>
+  <a href="https://wa.me/?text=Confira%20este%20link!" target="_blank" class="header-cta-btn">Compartilhar <i class="fas fa-share-alt"></i></a>
+</header>
+
+<div class="skeleton-screen" id="skeleton-screen">
+  <div class="sk-logo shimmer"></div>
+  <div class="sk-title shimmer" style="width:240px;margin-bottom:10px"></div>
+  <div class="sk-title shimmer" style="width:160px;margin-bottom:40px"></div>
+  <div class="sk-card shimmer"></div>
+  <div class="sk-card shimmer"></div>
+  <div class="sk-card shimmer"></div>
+</div>
+
+<div class="loading-screen" id="loading-screen" style="display:none">
   <div class="loading-spinner"></div>
-  <p class="loading-text">Carregando...</p>
 </div>
 
 <div class="error-screen" id="error-screen">
   <i class="fas fa-exclamation-triangle"></i>
-  <h2>Cliente não encontrado</h2>
-  <p>O link bio que você está procurando não existe ou foi desativado.</p>
+  <h2>Página não encontrada</h2>
+  <p>O link que você está tentando acessar não existe ou foi removido.</p>
+  <a href="javascript:location.reload()" class="btn-retry">Tentar Novamente</a>
 </div>
 
 <div id="bg-layer"></div>
@@ -259,6 +297,21 @@ function buildPage(data) {
   }
 
   document.title = data.name;
+  
+  // Dynamic Meta Tags (Client-side update)
+  document.querySelector('meta[property="og:title"]').setAttribute('content', data.name);
+  document.querySelector('meta[property="og:description"]').setAttribute('content', data.description || 'Acesse nossos links oficiais.');
+  if (data.logo) {
+    document.querySelector('meta[property="og:image"]').setAttribute('content', data.logo);
+  }
+
+  // Header mini logo
+  const headerLogo = document.getElementById('header-logo-container');
+  if (data.logo) {
+    headerLogo.innerHTML = `<img src="${data.logo}" alt="${data.name}" class="header-logo-mini">`;
+  } else {
+    headerLogo.innerHTML = `<div style="font-weight:900;font-size:14px;color:var(--accent)">${data.name}</div>`;
+  }
 
 
   // Hero logo
@@ -330,7 +383,7 @@ function buildPage(data) {
         <div class="card-body">
           <span class="card-cat">${info.cat}</span>
           <h3 class="card-name">${link.label}</h3>
-          <p class="card-desc">${getDesc(link.type)}</p>
+          <p class="card-desc">${link.description || getDesc(link.type)}</p>
           <span class="card-cta">${info.cta} <i class="fas fa-arrow-right"></i></span>
         </div>
         <div class="card-icon-area" style="animation-delay:-${delay}ms">
@@ -346,6 +399,7 @@ function buildPage(data) {
   }).join('');
 
   document.getElementById('loading-screen').style.display = 'none';
+  document.getElementById('skeleton-screen').style.display = 'none';
   initAnimations();
 }
 
@@ -406,6 +460,14 @@ function initAnimations() {
     .to('#main-wrapper', {y:0,duration:1.0,ease:'power3.out'}, 2.3)
     .to('#portal-flash', {opacity:0,duration:1.0,ease:'power2.out'}, 2.2)
     .set('#hero', {display:'none'});
+
+  // Sticky Header Scroll Trigger
+  ScrollTrigger.create({
+    trigger: '#main-wrapper',
+    start: 'top top',
+    onEnter: () => document.getElementById('sticky-header').classList.add('visible'),
+    onLeaveBack: () => document.getElementById('sticky-header').classList.remove('visible'),
+  });
 
   let played = false;
   function play() {

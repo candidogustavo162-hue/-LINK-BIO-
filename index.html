@@ -229,7 +229,7 @@
         .links-list { display: grid; gap: 10px; margin-bottom: 20px; }
         .link-row {
             display: grid;
-            grid-template-columns: 140px 1fr 1fr 44px;
+            grid-template-columns: 140px 1fr 1fr 1fr 44px;
             gap: 10px;
             align-items: center;
             background: var(--surface-light);
@@ -652,6 +652,7 @@
                     ${LINK_TYPES.map(t => `<option value="${t.id}" ${link.type === t.id ? 'selected' : ''}>${t.label}</option>`).join('')}
                 </select>
                 <input type="text" class="form-control link-label" placeholder="Rótulo" value="${link.label}">
+                <input type="text" class="form-control link-desc" placeholder="Descrição (Opcional)" value="${link.description || ''}">
                 <input type="text" class="form-control link-url" placeholder="URL" value="${link.url}">
                 <button type="button" class="btn btn-danger btn-remove-link" style="padding:0; width:44px; height:44px; justify-content:center;">
                     <i class="fas fa-times"></i>
@@ -750,8 +751,9 @@
                 document.querySelectorAll('.link-row').forEach(row => {
                     const type = row.querySelector('.link-type').value;
                     const label = row.querySelector('.link-label').value.trim();
+                    const description = row.querySelector('.link-desc').value.trim();
                     const url = row.querySelector('.link-url').value.trim();
-                    if (label || url) links.push({ type, label, url });
+                    if (label || url) links.push({ type, label, description, url });
                 });
                 clientData.links = links;
 
